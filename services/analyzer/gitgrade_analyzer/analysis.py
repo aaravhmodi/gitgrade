@@ -22,8 +22,8 @@ LABEL_WEIGHTS = {
     "high_value": 1.0,
 }
 
-DEFAULT_DATASET = Path(__file__).resolve().parents[2] / "datasets" / "training_combined_with_local.jsonl"
-DEFAULT_REVIEWS = Path(__file__).resolve().parents[2] / "datasets" / "reviews" / "manual_labels.jsonl"
+DEFAULT_DATASET = Path(__file__).resolve().parents[3] / "datasets" / "training_combined_with_local.jsonl"
+DEFAULT_REVIEWS = Path(__file__).resolve().parents[3] / "datasets" / "reviews" / "manual_labels.jsonl"
 
 
 def _file_mix(features: CommitFeatures) -> dict[str, int]:
