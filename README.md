@@ -28,6 +28,25 @@ pip install -e .
 uvicorn gitgrade_analyzer.main:app --reload
 ```
 
+Example API payloads:
+
+```json
+POST /analyze/repo
+{
+  "repo": "vercel/next.js",
+  "commit_limit": 40
+}
+```
+
+```json
+POST /analyze/user
+{
+  "username": "aaravhmodi",
+  "repo_limit": 6,
+  "commits_per_repo": 30
+}
+```
+
 ### Model training
 
 ```bash

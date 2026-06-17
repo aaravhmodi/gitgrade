@@ -1,10 +1,14 @@
-from .models import CommitFeatures, CommitReport, RepositoryReport
-from .scoring import score_commit, summarize_repository
+from .analysis import aggregate_report, analyze_commit_features, analyze_repo, analyze_user, predict_commit
+from .models import AnalysisSummary, CommitFeatures, CommitPrediction, GitGradeReport
 
 __all__ = [
+    "AnalysisSummary",
     "CommitFeatures",
-    "CommitReport",
-    "RepositoryReport",
-    "score_commit",
-    "summarize_repository",
+    "CommitPrediction",
+    "GitGradeReport",
+    "aggregate_report",
+    "analyze_commit_features",
+    "analyze_repo",
+    "analyze_user",
+    "predict_commit",
 ]

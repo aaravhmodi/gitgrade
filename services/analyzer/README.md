@@ -5,8 +5,8 @@ Initial analyzer service for GitGrade.
 ## Current scope
 
 - stable report models
-- rule-based scoring stub
-- health and sample analysis API
+- hybrid model + deterministic impact scoring
+- repo/user analysis API
 
 ## Run
 
@@ -14,3 +14,10 @@ Initial analyzer service for GitGrade.
 pip install -e .
 uvicorn gitgrade_analyzer.main:app --reload
 ```
+
+## API
+
+- `GET /health`
+- `GET /sample-report`
+- `POST /analyze/repo`
+- `POST /analyze/user`
