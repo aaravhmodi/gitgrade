@@ -222,6 +222,12 @@ input {
   gap: 12px;
 }
 
+.connect-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
 .helper-text {
   font-size: 12px;
   color: var(--text-muted);
@@ -230,6 +236,13 @@ input {
 
 .connected-state {
   display: grid;
+  gap: 12px;
+}
+
+.connected-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
@@ -542,7 +555,8 @@ input {
 
   .input-row,
   .repo-toolbar,
-  .form-actions {
+  .form-actions,
+  .connected-header {
     flex-direction: column;
   }
 

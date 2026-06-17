@@ -9,8 +9,7 @@ const userPayload = `{
   "username": "aaravhmodi",
   "selected_repos": ["aaravhmodi/gitgrade", "aaravhmodi/news-scraper"],
   "repo_limit": 2,
-  "commits_per_repo": 30,
-  "github_token": "<personal access token>"
+  "commits_per_repo": 30
 }`;
 
 export default function DocsPage() {
@@ -63,8 +62,8 @@ npm run dev:web`}</code>
           <p className="card-label">Connect</p>
           <h2>GitHub repo selection</h2>
           <div className="docs-copy">
-            <p>User analysis now starts with a GitHub personal access token.</p>
-            <p>The app loads the authenticated account and presents a multi-select repo picker.</p>
+            <p>User analysis now starts with a GitHub App install and authorization flow.</p>
+            <p>The app redirects users to GitHub, stores the returned session server-side, and loads granted repositories.</p>
             <p>Selected repos are sent to the analyzer so the report targets only the repositories you chose.</p>
           </div>
         </article>

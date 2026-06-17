@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import type { GitGradeReport } from "@/lib/report-types";
 
@@ -11,6 +11,9 @@ type ConnectedRepo = {
   private: boolean;
   updated_at: string;
   html_url: string;
+  installation_id: number;
+  owner: string;
+  target_type: string;
 };
 
 function pct(value: number) {
@@ -20,12 +23,11 @@ function pct(value: number) {
 export default function HomePage() {
   const [mode, setMode] = useState<"user" | "repo">("user");
   const [subject, setSubject] = useState("vercel/next.js");
-  const [githubToken, setGithubToken] = useState("");
   const [connectedUsername, setConnectedUsername] = useState<string | null>(null);
   const [repos, setRepos] = useState<ConnectedRepo[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
   const [repoSearch, setRepoSearch] = useState("");
-  const [loadingRepos, setLoadingRepos] = useState(false);
+  const [loadingRepos, setLoadingRepos] = useState(true);
   const [connectingError, setConnectingError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -39,19 +41,11 @@ export default function HomePage() {
     return repos.filter((repo) => repo.full_name.toLowerCase().includes(query));
   }, [repoSearch, repos]);
 
-  async function handleConnectGithub() {
+  async function loadGithubRepos() {
     setLoadingRepos(true);
-    setConnectingError(null);
-    setError(null);
-    setSaveMessage(null);
 
     try {
-      const response = await fetch("/api/github/repos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: githubToken }),
-      });
-
+      const response = await fetch("/api/github/repos", { cache: "no-store" });
       const payload = (await response.json().catch(() => null)) as
         | {
             error?: string;
@@ -61,20 +55,57 @@ export default function HomePage() {
         | null;
 
       if (!response.ok || !payload?.username || !payload?.repos) {
-        throw new Error(payload?.error ?? "GitHub connection failed.");
+        setConnectedUsername(null);
+        setRepos([]);
+        setSelectedRepos([]);
+        if (payload?.error && response.status !== 401) {
+          setConnectingError(payload.error);
+        }
+        return;
       }
 
       setConnectedUsername(payload.username);
       setRepos(payload.repos);
-      setSelectedRepos(payload.repos.slice(0, 6).map((repo) => repo.full_name));
+      setSelectedRepos((current) =>
+        current.length ? current.filter((repo) => payload.repos!.some((item) => item.full_name === repo)) : payload.repos!.slice(0, 6).map((repo) => repo.full_name)
+      );
+      setConnectingError(null);
     } catch (caughtError) {
-      setConnectedUsername(null);
-      setRepos([]);
-      setSelectedRepos([]);
-      setConnectingError(caughtError instanceof Error ? caughtError.message : "GitHub connection failed.");
+      setConnectingError(caughtError instanceof Error ? caughtError.message : "Unable to load repositories.");
     } finally {
       setLoadingRepos(false);
     }
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const githubError = params.get("github_error");
+
+    if (githubError) {
+      setConnectingError(githubError);
+      params.delete("github_error");
+      const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+      window.history.replaceState({}, "", nextUrl);
+    } else if (params.get("github_connected")) {
+      params.delete("github_connected");
+      const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+      window.history.replaceState({}, "", nextUrl);
+    }
+
+    void loadGithubRepos();
+  }, []);
+
+  function handleConnectGithub() {
+    window.location.href = "/api/github/install/start";
+  }
+
+  async function handleDisconnectGithub() {
+    await fetch("/api/github/repos", { method: "DELETE" });
+    setConnectedUsername(null);
+    setRepos([]);
+    setSelectedRepos([]);
+    setRepoSearch("");
+    setReport(null);
   }
 
   function toggleRepo(repoFullName: string) {
@@ -107,11 +138,9 @@ export default function HomePage() {
       const requestBody =
         mode === "user"
           ? {
-              username: connectedUsername,
               selected_repos: selectedRepos.slice(0, 50),
               repo_limit: Math.max(Math.min(selectedRepos.length, 50), 1),
               commits_per_repo: 30,
-              github_token: githubToken,
             }
           : { repo: subject, commit_limit: 40 };
 
@@ -199,9 +228,7 @@ export default function HomePage() {
           <div className="mode-toggle">
             <button
               className={mode === "user" ? "mode-btn active" : "mode-btn"}
-              onClick={() => {
-                setMode("user");
-              }}
+              onClick={() => setMode("user")}
               type="button"
             >
               User
@@ -220,34 +247,31 @@ export default function HomePage() {
 
           {mode === "user" ? (
             <div className="user-connect-panel">
-              <div className="input-row">
-                <input
-                  className="text-input"
-                  onChange={(e) => setGithubToken(e.target.value)}
-                  placeholder="GitHub personal access token"
-                  type="password"
-                  value={githubToken}
-                />
-                <button
-                  className="btn-secondary"
-                  disabled={loadingRepos || !githubToken.trim()}
-                  onClick={handleConnectGithub}
-                  type="button"
-                >
-                  {loadingRepos ? "Connecting..." : "Connect GitHub"}
-                </button>
-              </div>
+              {!connectedUsername ? (
+                <div className="connect-actions">
+                  <button className="btn-primary" onClick={handleConnectGithub} type="button">
+                    Connect GitHub
+                  </button>
+                  <p className="helper-text">
+                    Install the GitHub App, authorize it, and GitGrade will load the repositories
+                    you granted access to.
+                  </p>
+                </div>
+              ) : null}
 
-              <p className="helper-text">
-                Use a GitHub personal access token with repository read access. GitGrade
-                uses it to load your repos and analyze selected commit history.
-              </p>
+              {loadingRepos ? <p className="helper-text">Loading GitHub repositories...</p> : null}
 
               {connectedUsername ? (
                 <div className="connected-state">
-                  <p className="status-line ok">
-                    Connected as <strong>{connectedUsername}</strong>
-                  </p>
+                  <div className="connected-header">
+                    <p className="status-line ok">
+                      Connected as <strong>{connectedUsername}</strong>
+                    </p>
+                    <button className="btn-secondary" onClick={handleDisconnectGithub} type="button">
+                      Disconnect
+                    </button>
+                  </div>
+
                   <div className="repo-toolbar">
                     <input
                       className="text-input"
@@ -277,7 +301,7 @@ export default function HomePage() {
                             <div className="repo-meta">
                               <span className="repo-name">{repo.full_name}</span>
                               <span className="repo-detail">
-                                {repo.private ? "Private" : "Public"} · updated{" "}
+                                {repo.private ? "Private" : "Public"} · {repo.target_type.toLowerCase()} · updated{" "}
                                 {new Date(repo.updated_at).toLocaleDateString()}
                               </span>
                             </div>
@@ -313,7 +337,7 @@ export default function HomePage() {
               className="btn-primary"
               disabled={
                 loading ||
-                (mode === "repo" ? !subject.trim() : !connectedUsername || selectedRepos.length === 0)
+                (mode === "repo" ? !subject.trim() : loadingRepos || !connectedUsername || selectedRepos.length === 0)
               }
               type="submit"
             >
