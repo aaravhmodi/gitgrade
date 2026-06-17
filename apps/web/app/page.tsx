@@ -31,7 +31,7 @@ export default function HomePage() {
           mode === "user"
             ? { username: subject, repo_limit: 6, commits_per_repo: 30 }
             : { repo: subject, commit_limit: 40 }
-        )
+        ),
       });
 
       const payload = (await response.json().catch(() => null)) as GitGradeReport | { error?: string } | null;
@@ -48,9 +48,7 @@ export default function HomePage() {
   }
 
   async function handleSaveReport() {
-    if (!report) {
-      return;
-    }
+    if (!report) return;
 
     setSaving(true);
     setSaveMessage(null);
@@ -59,7 +57,7 @@ export default function HomePage() {
       const response = await fetch("/api/reports/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(report)
+        body: JSON.stringify(report),
       });
 
       const payload = (await response.json()) as { error?: string; id?: string };
@@ -78,119 +76,104 @@ export default function HomePage() {
   const summary = report?.summary;
   const topCommits = report?.top_commits ?? [];
   const breakdown = summary ? Object.entries(summary.commit_label_breakdown) : [];
-  const fileBreakdown = summary ? Object.entries(summary.file_type_breakdown).filter(([, count]) => count > 0) : [];
+  const fileBreakdown = summary
+    ? Object.entries(summary.file_type_breakdown).filter(([, count]) => count > 0)
+    : [];
 
   return (
-    <main className="product-shell">
-      <div className="ambient ambient-a" />
-      <div className="ambient ambient-b" />
-
-      <header className="top-rail">
-        <span className="brand-mark">gitgrade</span>
-        <div className="rail-chips">
-          <span>private</span>
-          <span>model-backed</span>
-          <span>supabase</span>
-        </div>
+    <main className="shell">
+      <header className="header">
+        <span className="brand">gitgrade</span>
+        <span className="header-status">commit signal · not activity</span>
       </header>
 
-      <section className="hero-frame">
-        <div className="hero-copy">
-          <p className="kicker">GitGrade</p>
-          <h1>Measure GitHub work by impact, not activity.</h1>
-          <p className="hero-note">
-            Commit-level ML plus file-aware scoring for source-heavy engineering work,
-            weak maintenance churn, and contribution padding risk.
-          </p>
-        </div>
+      <section className="hero">
+        <h1>Measure GitHub work by impact, not activity.</h1>
+        <p className="hero-sub">
+          Commit-level scoring for source-heavy engineering work. Separates meaningful
+          contributions from maintenance churn and padding.
+        </p>
 
-        <form className="analysis-bar" onSubmit={handleSubmit}>
-          <div className="mode-row">
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="mode-toggle">
             <button
-              className={mode === "user" ? "mode-pill active" : "mode-pill"}
-              onClick={() => {
-                setMode("user");
-                setSubject("aaravhmodi");
-              }}
+              className={mode === "user" ? "mode-btn active" : "mode-btn"}
+              onClick={() => { setMode("user"); setSubject("aaravhmodi"); }}
               type="button"
             >
-              user
+              User
             </button>
             <button
-              className={mode === "repo" ? "mode-pill active" : "mode-pill"}
-              onClick={() => {
-                setMode("repo");
-                setSubject("vercel/next.js");
-              }}
+              className={mode === "repo" ? "mode-btn active" : "mode-btn"}
+              onClick={() => { setMode("repo"); setSubject("vercel/next.js"); }}
               type="button"
             >
-              repo
+              Repo
             </button>
           </div>
 
-          <input
-            className="subject-input"
-            onChange={(event) => setSubject(event.target.value)}
-            placeholder={mode === "user" ? "aaravhmodi" : "owner/repo"}
-            value={subject}
-          />
-
-          <div className="button-row">
-            <button className="primary-button" disabled={loading || !subject.trim()} type="submit">
-              {loading ? "running..." : "analyze"}
+          <div className="input-row">
+            <input
+              className="text-input"
+              onChange={(e) => setSubject(e.target.value)}
+              placeholder={mode === "user" ? "username" : "owner/repo"}
+              value={subject}
+            />
+            <button className="btn-primary" disabled={loading || !subject.trim()} type="submit">
+              {loading ? "Running…" : "Analyze"}
             </button>
-            <button className="secondary-button" disabled={!report || saving} onClick={handleSaveReport} type="button">
-              {saving ? "saving..." : "save"}
+            <button className="btn-secondary" disabled={!report || saving} onClick={handleSaveReport} type="button">
+              {saving ? "Saving…" : "Save"}
             </button>
           </div>
 
-          {error ? <p className="inline-status error">{error}</p> : null}
-          {saveMessage ? <p className="inline-status ok">{saveMessage}</p> : null}
+          {error ? <p className="status-line error">{error}</p> : null}
+          {saveMessage ? <p className="status-line ok">{saveMessage}</p> : null}
         </form>
       </section>
 
-      <div className="divider-line" />
+      <div className="divider" />
 
-      <section className="signal-strip">
-        <div>
-          <span className="signal-label">grade</span>
-          <strong>{summary?.overall_grade ?? "?"}</strong>
+      <div className="metrics">
+        <div className="metric">
+          <div className="metric-label">Grade</div>
+          <div className={`metric-value${summary ? "" : " empty"}`}>{summary?.overall_grade ?? "—"}</div>
         </div>
-        <div>
-          <span className="signal-label">meaningful</span>
-          <strong>{summary ? pct(summary.meaningful_commit_ratio) : "?"}</strong>
+        <div className="metric">
+          <div className="metric-label">Meaningful</div>
+          <div className={`metric-value${summary ? "" : " empty"}`}>{summary ? pct(summary.meaningful_commit_ratio) : "—"}</div>
         </div>
-        <div>
-          <span className="signal-label">impact</span>
-          <strong>{summary ? summary.impact_per_commit.toFixed(0) : "?"}</strong>
+        <div className="metric">
+          <div className="metric-label">Impact / commit</div>
+          <div className={`metric-value${summary ? "" : " empty"}`}>{summary ? summary.impact_per_commit.toFixed(0) : "—"}</div>
         </div>
-        <div>
-          <span className="signal-label">risk</span>
-          <strong>{summary?.padding_risk ?? "?"}</strong>
+        <div className="metric">
+          <div className="metric-label">Padding risk</div>
+          <div className={`metric-value${summary ? "" : " empty"}`}>{summary?.padding_risk ?? "—"}</div>
         </div>
-      </section>
+      </div>
 
-      <section className="editorial-grid">
-        <article className="editorial-block lead-block">
-          <p className="block-label">report</p>
-          <h2>{report?.subject_name ?? "run a repo or user analysis"}</h2>
-          <p className="block-copy">
+      <div className="grid">
+        <div className="card">
+          <p className="card-label">Report</p>
+          <h2>{report?.subject_name ?? "No analysis yet"}</h2>
+          <p className="card-body">
             {summary
-              ? `${summary.total_commits} commits analyzed. ${summary.strongest_signal.replaceAll("_", " ")} leads the visible signal. ${summary.weakest_signal.replaceAll("_", " ")} lags.`
-              : "A one-page product surface for recruiter-facing GitHub signal, not raw green-square activity."}
+              ? `${summary.total_commits} commits analyzed. ${summary.strongest_signal.replaceAll("_", " ")} leads. ${summary.weakest_signal.replaceAll("_", " ")} lags.`
+              : "Run a user or repo analysis to see results here."}
           </p>
           {summary?.weak_signal_patterns?.length ? (
-            <ul className="micro-list">
+            <ul className="tag-list">
               {summary.weak_signal_patterns.slice(0, 3).map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           ) : null}
-        </article>
+        </div>
 
-        <article className="editorial-block">
-          <p className="block-label">commit mix</p>
-          <div className="data-list">
+        <div className="card">
+          <p className="card-label">Commit mix</p>
+          <div className="data-rows">
             {breakdown.length ? (
               breakdown.map(([label, count]) => (
                 <div className="data-row" key={label}>
@@ -199,14 +182,14 @@ export default function HomePage() {
                 </div>
               ))
             ) : (
-              <p className="muted-copy">No analysis yet.</p>
+              <p className="empty-state">No data yet.</p>
             )}
           </div>
-        </article>
+        </div>
 
-        <article className="editorial-block">
-          <p className="block-label">file weight</p>
-          <div className="data-list">
+        <div className="card">
+          <p className="card-label">File weight</p>
+          <div className="data-rows">
             {fileBreakdown.length ? (
               fileBreakdown.slice(0, 6).map(([label, count]) => (
                 <div className="data-row" key={label}>
@@ -215,30 +198,30 @@ export default function HomePage() {
                 </div>
               ))
             ) : (
-              <p className="muted-copy">Source-heavy work outranks data and generated churn.</p>
+              <p className="empty-state">No data yet.</p>
             )}
           </div>
-        </article>
+        </div>
 
-        <article className="editorial-block wide-block">
-          <p className="block-label">top commits</p>
-          <div className="top-commit-list">
+        <div className="card card-wide">
+          <p className="card-label">Top commits</p>
+          <div className="commit-rows">
             {topCommits.length ? (
-              topCommits.slice(0, 4).map((commit) => (
-                <div className="top-commit-row" key={commit.sha}>
+              topCommits.slice(0, 5).map((commit) => (
+                <div className="commit-row" key={commit.sha}>
                   <div>
-                    <p>{commit.message}</p>
-                    <span>{commit.predicted_label.replaceAll("_", " ")}</span>
+                    <p className="commit-msg">{commit.message}</p>
+                    <span className="commit-tag">{commit.predicted_label.replaceAll("_", " ")}</span>
                   </div>
-                  <strong>{commit.score}</strong>
+                  <span className="commit-score">{commit.score}</span>
                 </div>
               ))
             ) : (
-              <p className="muted-copy">High-signal commits appear here after analysis.</p>
+              <p className="empty-state">High-signal commits appear here after analysis.</p>
             )}
           </div>
-        </article>
-      </section>
+        </div>
+      </div>
     </main>
   );
 }
