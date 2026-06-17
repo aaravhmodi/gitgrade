@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
@@ -15,7 +16,7 @@ class GithubCommitSource:
 
 class GithubClient:
     def __init__(self, token: str | None = None, user_agent: str = "gitgrade-dev") -> None:
-        self.token = token
+        self.token = token or os.getenv("GITHUB_TOKEN")
         self.user_agent = user_agent
 
     def _get_json(self, url: str) -> Any:

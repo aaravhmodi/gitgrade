@@ -44,6 +44,39 @@ input {
   padding: 44px 0 90px;
 }
 
+.top-rail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+}
+
+.brand-mark {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--accent);
+}
+
+.rail-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.rail-chips span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .ambient {
   position: fixed;
   inset: auto;
@@ -96,6 +129,15 @@ input {
   letter-spacing: -0.045em;
   font-weight: 500;
   max-width: 8ch;
+}
+
+.hero-copy h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 1px;
+  margin-top: 20px;
+  background: linear-gradient(90deg, var(--line-strong), transparent);
 }
 
 .hero-note,
@@ -191,6 +233,13 @@ input {
   padding-top: 34px;
 }
 
+.divider-line {
+  height: 1px;
+  width: 100%;
+  margin-top: 12px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
 .editorial-block {
   min-height: 120px;
 }
@@ -252,6 +301,11 @@ input {
 }
 
 @media (max-width: 900px) {
+  .top-rail {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .signal-strip,
   .editorial-grid {
     grid-template-columns: 1fr;

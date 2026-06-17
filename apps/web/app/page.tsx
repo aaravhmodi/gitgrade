@@ -85,6 +85,15 @@ export default function HomePage() {
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
 
+      <header className="top-rail">
+        <span className="brand-mark">gitgrade</span>
+        <div className="rail-chips">
+          <span>private</span>
+          <span>model-backed</span>
+          <span>supabase</span>
+        </div>
+      </header>
+
       <section className="hero-frame">
         <div className="hero-copy">
           <p className="kicker">GitGrade</p>
@@ -139,6 +148,8 @@ export default function HomePage() {
           {saveMessage ? <p className="inline-status ok">{saveMessage}</p> : null}
         </form>
       </section>
+
+      <div className="divider-line" />
 
       <section className="signal-strip">
         <div>
