@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 
 from .analysis import analyze_commit_features, analyze_repo, analyze_user
