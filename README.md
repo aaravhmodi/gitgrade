@@ -89,6 +89,15 @@ cd services/analyzer
 3. Visualize those reports in the web app.
 4. Add labeled data and ML after the scoring contract is stable.
 
+## GitHub App setup
+
+Use the custom domain as the callback URL everywhere:
+
+- GitHub App callback URL: `https://gitgradebyaarav.xyz/api/github/callback`
+- Webhook URL: `https://gitgradebyaarav.xyz/api/github/webhooks`
+
+Do not leave the GitHub App pointed at the old Vercel callback URL unless you explicitly want auth redirects to land there.
+
 ## Training approach
 
 - Start with labeled open-source commit data in JSONL format.

@@ -10,7 +10,6 @@ export async function GET() {
     "GITHUB_APP_PRIVATE_KEY",
     "GITHUB_APP_WEBHOOK_SECRET",
     "GITHUB_APP_SLUG",
-    "GITHUB_APP_CALLBACK_URL",
   ] as const;
 
   const present = Object.fromEntries(

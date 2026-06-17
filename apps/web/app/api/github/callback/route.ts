@@ -43,7 +43,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const session = await createSessionFromCode(code);
+    const callbackUrl = new URL("/api/github/callback", request.url).toString();
+    const session = await createSessionFromCode(code, callbackUrl);
     await persistGithubSession(session);
     const installations = await getAuthorizedInstallations(session.accessToken);
     const cookieStore = await cookies();

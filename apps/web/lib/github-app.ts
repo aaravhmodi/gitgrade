@@ -13,7 +13,6 @@ type GithubAppConfig = {
   privateKey: string;
   webhookSecret: string;
   slug: string;
-  callbackUrl: string;
 };
 
 const REQUIRED_GITHUB_APP_ENV_KEYS = [
@@ -48,8 +47,6 @@ export function getGithubAppConfig(): GithubAppConfig | null {
   const privateKey = process.env.GITHUB_APP_PRIVATE_KEY;
   const webhookSecret = process.env.GITHUB_APP_WEBHOOK_SECRET;
   const slug = process.env.GITHUB_APP_SLUG;
-  const callbackUrl = process.env.GITHUB_APP_CALLBACK_URL ?? "https://gitgrade-web.vercel.app/api/github/callback";
-
   if (!appId || !clientId || !clientSecret || !privateKey || !webhookSecret || !slug) {
     return null;
   }
@@ -61,7 +58,6 @@ export function getGithubAppConfig(): GithubAppConfig | null {
     privateKey: privateKey.replace(/\\n/g, "\n"),
     webhookSecret,
     slug,
-    callbackUrl,
   };
 }
 
@@ -163,7 +159,7 @@ async function fetchGithubJson<T>(url: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
-async function exchangeCodeForToken(code: string): Promise<GithubOAuthTokenResponse> {
+async function exchangeCodeForToken(code: string, callbackUrl: string): Promise<GithubOAuthTokenResponse> {
   const config = requireGithubAppConfig();
   const response = await fetch(`${GITHUB_OAUTH_URL}/access_token`, {
     method: "POST",
@@ -176,7 +172,7 @@ async function exchangeCodeForToken(code: string): Promise<GithubOAuthTokenRespo
       client_id: config.clientId,
       client_secret: config.clientSecret,
       code,
-      redirect_uri: config.callbackUrl,
+      redirect_uri: callbackUrl,
     }),
     cache: "no-store",
   });
@@ -222,8 +218,8 @@ function toIsoOrNull(secondsFromNow?: number) {
   return new Date(Date.now() + secondsFromNow * 1000).toISOString();
 }
 
-export async function createSessionFromCode(code: string) {
-  const tokenPayload = await exchangeCodeForToken(code);
+export async function createSessionFromCode(code: string, callbackUrl: string) {
+  const tokenPayload = await exchangeCodeForToken(code, callbackUrl);
   const user = await fetchGithubJson<{ login: string }>(`${GITHUB_API_URL}/user`, {
     headers: {
       Authorization: `Bearer ${tokenPayload.access_token}`,
@@ -335,9 +331,9 @@ export function buildGithubInstallUrl() {
   return `https://github.com/apps/${config.slug}/installations/new`;
 }
 
-export function buildGithubAuthorizeUrl() {
+export function buildGithubAuthorizeUrl(callbackUrl: string) {
   const config = requireGithubAppConfig();
-  return `${GITHUB_OAUTH_URL}/authorize?client_id=${encodeURIComponent(config.clientId)}&redirect_uri=${encodeURIComponent(config.callbackUrl)}`;
+  return `${GITHUB_OAUTH_URL}/authorize?client_id=${encodeURIComponent(config.clientId)}&redirect_uri=${encodeURIComponent(callbackUrl)}`;
 }
 
 export function verifyGithubWebhookSignature(payload: string, signatureHeader: string | null) {
