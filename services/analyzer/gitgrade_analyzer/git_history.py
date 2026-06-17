@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from .ingestion import VAGUE_MESSAGES, _classify_file
+from .ingestion import CORE_PATH_MARKERS, VAGUE_MESSAGES, _classify_file
 from .models import CommitFeatures
 
 
@@ -70,15 +70,21 @@ def commit_features_from_git_record(record: dict[str, object]) -> CommitFeatures
         "docs": 0,
         "generated": 0,
         "config": 0,
+        "data": 0,
+        "asset": 0,
     }
     additions = 0
     deletions = 0
+    core_files_changed = 0
 
     for file_record in files:
         path = file_record["path"]
         category = _classify_file(path)
         if category in counts:
             counts[category] += 1
+        path_parts = {part.lower() for part in Path(path).parts}
+        if path_parts & CORE_PATH_MARKERS:
+            core_files_changed += 1
         additions += file_record["added"]
         deletions += file_record["deleted"]
 
@@ -98,6 +104,9 @@ def commit_features_from_git_record(record: dict[str, object]) -> CommitFeatures
         docs_files_changed=counts["docs"],
         generated_files_changed=counts["generated"],
         config_files_changed=counts["config"],
+        data_files_changed=counts["data"],
+        asset_files_changed=counts["asset"],
+        core_files_changed=core_files_changed,
         vague_message=normalized in VAGUE_MESSAGES or len(normalized.split()) <= 1,
         issue_reference="#" in message,
         tiny_diff=tiny_diff,

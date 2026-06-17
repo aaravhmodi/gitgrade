@@ -23,8 +23,11 @@ SOURCE_EXTENSIONS = {
     ".swift",
     ".kt",
 }
+DATA_EXTENSIONS = {".csv", ".tsv", ".parquet", ".feather", ".jsonl"}
+ASSET_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico", ".mp4", ".mov", ".pdf"}
 DOC_PATH_MARKERS = {"docs", "doc"}
 TEST_PATH_MARKERS = {"test", "tests", "__tests__", "spec", "specs"}
+CORE_PATH_MARKERS = {"src", "app", "lib", "api", "backend", "frontend", "components", "server"}
 GENERATED_FILE_NAMES = {
     "package-lock.json",
     "yarn.lock",
@@ -48,6 +51,10 @@ def _classify_file(path: str) -> str:
 
     if name in GENERATED_FILE_NAMES or "dist" in parts or "vendor" in parts:
         return "generated"
+    if file_path.suffix in DATA_EXTENSIONS or "data" in parts or "dataset" in parts:
+        return "data"
+    if file_path.suffix in ASSET_EXTENSIONS or "assets" in parts or "images" in parts:
+        return "asset"
     if parts & TEST_PATH_MARKERS:
         return "test"
     if parts & DOC_PATH_MARKERS or file_path.suffix == ".md":
@@ -98,12 +105,19 @@ def commit_features_from_github_detail(detail: dict[str, Any]) -> CommitFeatures
         "docs": 0,
         "generated": 0,
         "config": 0,
+        "data": 0,
+        "asset": 0,
     }
+    core_files_changed = 0
 
     for file in files:
-        category = _classify_file(file.get("filename", ""))
+        path = file.get("filename", "")
+        category = _classify_file(path)
         if category in counts:
             counts[category] += 1
+        file_path = PurePosixPath(path.lower())
+        if set(file_path.parts) & CORE_PATH_MARKERS:
+            core_files_changed += 1
 
     message = detail["commit"]["message"].splitlines()[0]
     total_change = detail.get("stats", {}).get("total", 0)
@@ -119,6 +133,9 @@ def commit_features_from_github_detail(detail: dict[str, Any]) -> CommitFeatures
         docs_files_changed=counts["docs"],
         generated_files_changed=counts["generated"],
         config_files_changed=counts["config"],
+        data_files_changed=counts["data"],
+        asset_files_changed=counts["asset"],
+        core_files_changed=core_files_changed,
         vague_message=_is_vague_message(message),
         issue_reference="#" in message,
         tiny_diff=_is_tiny_diff(total_change, len(files)),

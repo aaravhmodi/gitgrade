@@ -92,3 +92,13 @@ def fit_full_classifier(records: list[LabeledCommit]) -> TrainingArtifacts:
 def predict_labels(artifacts: TrainingArtifacts, features: list[CommitFeatures]) -> list[str]:
     matrix = matrix_from_features(features)
     return list(artifacts.model.predict(matrix))
+
+
+def predict_probabilities(artifacts: TrainingArtifacts, features: list[CommitFeatures]) -> list[dict[str, float]]:
+    matrix = matrix_from_features(features)
+    probabilities = artifacts.model.predict_proba(matrix)
+    classes = list(artifacts.model.classes_)
+    return [
+        {label: float(probability_row[index]) for index, label in enumerate(classes)}
+        for probability_row in probabilities
+    ]
