@@ -16,6 +16,39 @@ type ConnectedRepo = {
   target_type: string;
 };
 
+function formatApiError(payload: unknown, fallback: string) {
+  if (!payload || typeof payload !== "object") {
+    return fallback;
+  }
+
+  const objectPayload = payload as {
+    error?: string;
+    detail?: Array<{ msg?: string } | string> | string;
+  };
+
+  if (typeof objectPayload.error === "string" && objectPayload.error.trim()) {
+    return objectPayload.error;
+  }
+
+  if (typeof objectPayload.detail === "string" && objectPayload.detail.trim()) {
+    return objectPayload.detail;
+  }
+
+  if (Array.isArray(objectPayload.detail) && objectPayload.detail.length) {
+    return objectPayload.detail
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        return item.msg ?? "";
+      })
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  return fallback;
+}
+
 function pct(value: number) {
   return `${Math.round(value * 100)}%`;
 }
@@ -139,7 +172,7 @@ export default function HomePage() {
         mode === "user"
           ? {
               selected_repos: selectedRepos.slice(0, 50),
-              repo_limit: Math.max(Math.min(selectedRepos.length, 50), 1),
+              repo_limit: Math.max(Math.min(selectedRepos.length, 20), 1),
               commits_per_repo: 30,
             }
           : { repo: subject, commit_limit: 40 };
@@ -159,9 +192,9 @@ export default function HomePage() {
         body: JSON.stringify(requestBody),
       });
 
-      const payload = (await response.json().catch(() => null)) as GitGradeReport | { error?: string } | null;
+      const payload = (await response.json().catch(() => null)) as GitGradeReport | { error?: string; detail?: unknown } | null;
       if (!response.ok) {
-        throw new Error((payload as { error?: string } | null)?.error ?? "Analysis failed.");
+        throw new Error(formatApiError(payload, "Analysis failed."));
       }
 
       setReport(payload as GitGradeReport);
