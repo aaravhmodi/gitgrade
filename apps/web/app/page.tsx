@@ -16,6 +16,15 @@ type ConnectedRepo = {
   target_type: string;
 };
 
+const pipelineStats = {
+  trainingRows: 2234,
+  manualReviews: 332,
+  userHistoryRows: 1074,
+  featureCount: 47,
+  treeCount: 200,
+  maxDepth: 8,
+};
+
 function formatApiError(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") {
     return fallback;
@@ -610,6 +619,118 @@ export default function HomePage() {
           </div>
         </aside>
       </div>
+
+      <div className="divider" />
+
+      <section className="pipeline-section">
+        <div className="pipeline-header">
+          <div>
+            <p className="eyebrow">Backend</p>
+            <h2>How the scoring pipeline works</h2>
+          </div>
+          <p className="pipeline-copy">
+            GitGrade is not just counting commits. The analyzer pulls commit history, extracts
+            structural features, runs a trained classifier, and blends that output with rule-based
+            impact scoring before generating the final grade.
+          </p>
+        </div>
+
+        <div className="pipeline-grid">
+          <article className="card pipeline-card">
+            <p className="card-label">Training corpus</p>
+            <div className="pipeline-metric">{pipelineStats.trainingRows.toLocaleString()}</div>
+            <p className="card-body">
+              labeled commits in the current merged training set, combining open-source examples with
+              local and user-specific history.
+            </p>
+          </article>
+
+          <article className="card pipeline-card">
+            <p className="card-label">Manual review</p>
+            <div className="pipeline-metric">{pipelineStats.manualReviews.toLocaleString()}</div>
+            <p className="card-body">
+              manually reviewed label overrides currently available to correct weak supervision and
+              sharpen borderline classifications.
+            </p>
+          </article>
+
+          <article className="card pipeline-card">
+            <p className="card-label">User history</p>
+            <div className="pipeline-metric">{pipelineStats.userHistoryRows.toLocaleString()}</div>
+            <p className="card-body">
+              user-history examples tracked separately for error analysis, review queues, and
+              future personalization work.
+            </p>
+          </article>
+
+          <article className="card pipeline-card">
+            <p className="card-label">Feature space</p>
+            <div className="pipeline-metric">{pipelineStats.featureCount}</div>
+            <p className="card-body">
+              engineered features extracted from commit structure, file mix, message patterns,
+              change size, and source-vs-non-source ratios.
+            </p>
+          </article>
+        </div>
+
+        <div className="pipeline-detail-grid">
+          <article className="card">
+            <p className="card-label">Pipeline steps</p>
+            <div className="pipeline-steps">
+              <div className="pipeline-step">
+                <span className="pipeline-step-number">01</span>
+                <div>
+                  <strong>Ingest</strong>
+                  <p className="card-body">Load recent commits from GitHub App-authorized repositories and normalize file-level change statistics.</p>
+                </div>
+              </div>
+              <div className="pipeline-step">
+                <span className="pipeline-step-number">02</span>
+                <div>
+                  <strong>Feature engineering</strong>
+                  <p className="card-body">Build 47 model features including file ratios, message-type cues, tiny-diff flags, and source/test pair signals.</p>
+                </div>
+              </div>
+              <div className="pipeline-step">
+                <span className="pipeline-step-number">03</span>
+                <div>
+                  <strong>ML prediction</strong>
+                  <p className="card-body">Run a Random Forest classifier with {pipelineStats.treeCount} trees and max depth {pipelineStats.maxDepth} to predict noise, low, medium, or high value.</p>
+                </div>
+              </div>
+              <div className="pipeline-step">
+                <span className="pipeline-step-number">04</span>
+                <div>
+                  <strong>Hybrid scoring</strong>
+                  <p className="card-body">Blend deterministic impact heuristics, label weights, and model confidence into one final weighted commit score.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article className="card">
+            <p className="card-label">Scoring blend</p>
+            <div className="signal-stack">
+              <div className="signal-item">
+                <span className="signal-name">Deterministic impact</span>
+                <strong>55%</strong>
+              </div>
+              <div className="signal-item">
+                <span className="signal-name">Predicted label weight</span>
+                <strong>35%</strong>
+              </div>
+              <div className="signal-item">
+                <span className="signal-name">Model confidence</span>
+                <strong>10%</strong>
+              </div>
+            </div>
+            <p className="card-body pipeline-footnote">
+              The deterministic pass rewards source-heavy, multi-file, test-backed implementation work and discounts tiny diffs,
+              docs-only edits, generated files, and non-code churn before the classifier adjusts the final result.
+            </p>
+          </article>
+        </div>
+      </section>
     </main>
   );
 }
