@@ -97,7 +97,10 @@ input {
 }
 
 .hero-copy {
-  padding: 6px 0;
+  padding: 2px 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
 }
 
 .hero h1 {
@@ -107,7 +110,6 @@ input {
   line-height: 1;
   color: var(--text);
   max-width: 12ch;
-  margin-bottom: 14px;
 }
 
 .hero-sub {
@@ -121,7 +123,7 @@ input {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  margin-top: 22px;
+  margin-top: 6px;
   max-width: 280px;
 }
 
