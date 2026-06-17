@@ -257,7 +257,7 @@ export default function HomePage() {
     : [];
 
   return (
-    <main className="shell shell-wide">
+    <main className="shell shell-wide app-shell">
       <header className="header">
         <span className="brand">gitgrade</span>
         <div className="header-links">
@@ -268,7 +268,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="hero hero-grid">
+      <section className="hero hero-grid hero-entrance">
         <div className="hero-copy">
           <p className="eyebrow">Recruiter View</p>
           <h1>100 commits a day does not prove a strong engineer.</h1>
@@ -430,9 +430,15 @@ export default function HomePage() {
                   </div>
                 ) : null}
 
-                {connectingError ? <p className="status-line error">{connectingError}</p> : null}
-              </div>
-            ) : (
+              {connectingError ? <p className="status-line error">{connectingError}</p> : null}
+            </div>
+          ) : (
+            <div className="repo-mode-panel">
+              <p className="helper-text">
+                Repo mode is for direct analysis of one public repository by slug, such as
+                <strong> `vercel/next.js`</strong>. Use it when you want to inspect a single codebase
+                without connecting a GitHub account.
+              </p>
               <div className="input-row">
                 <input
                   className="text-input"
@@ -441,7 +447,8 @@ export default function HomePage() {
                   value={subject}
                 />
               </div>
-            )}
+            </div>
+          )}
 
             <div className="form-actions">
               <button
@@ -488,7 +495,7 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      <div className="metrics">
+      <div className="metrics section-entrance">
         <div className="metric">
           <div className="metric-label">Grade</div>
           <div className={`metric-value${summary ? "" : " empty"}`}>{summary?.overall_grade ?? "-"}</div>
@@ -507,7 +514,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="results-layout">
+      <div className="results-layout section-entrance section-entrance-delay-1">
         <div className="results-main">
           <div className="grid">
             <div className="card card-emphasis">
@@ -637,16 +644,16 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      <section className="pipeline-section">
+      <section className="pipeline-section section-entrance section-entrance-delay-2">
         <div className="pipeline-header">
           <div>
             <p className="eyebrow">Backend</p>
             <h2>How the scoring pipeline works</h2>
           </div>
           <p className="pipeline-copy">
-            GitGrade is not just counting commits. The analyzer pulls commit history, extracts
-            structural features, runs a trained classifier, and blends that output with rule-based
-            impact scoring before generating the final grade.
+            A GitGrade product already exists, but this project is my own attempt to rebuild the idea
+            from scratch. Instead of treating commit count as proof of skill, this version analyzes
+            commit structure, labels likely signal with ML, and blends that with rule-based impact scoring.
           </p>
         </div>
 
