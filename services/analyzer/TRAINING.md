@@ -65,8 +65,10 @@ cd services/analyzer
 - `datasets/open_source_repo_manifest.json` lists candidate public repositories to expand next.
 - `scripts/collect_open_source_data.py` fetches public commit data from GitHub and exports weak labels.
 - `scripts/collect_from_git_repos.py` clones public repos and builds a larger local training dataset from git history.
+- `scripts/build_review_queue.py` samples commits into a manual review queue.
+- `scripts/review_labels.py` runs a terminal labeling workflow and saves review overrides.
 - `scripts/train_model.py` trains the first baseline classifier.
 
 ## Next step
 
-Implement the GitHub ingestion pipeline so the seed dataset can be replaced with real exported open-source commits at scale.
+Grow the reviewed slice so the model trains on corrected labels instead of only weak supervision.

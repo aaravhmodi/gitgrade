@@ -38,6 +38,14 @@ pip install -e .
 python scripts/train_model.py --dataset ..\..\datasets\seed_open_source_commits.jsonl
 ```
 
+### Manual review
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/build_review_queue.py --dataset ..\..\datasets\open_source_commits_git.jsonl --per-label 25
+.venv\Scripts\python scripts/review_labels.py --reviewer your-name
+```
+
 ### Initial product direction
 
 1. Build the rule-based analyzer first.
