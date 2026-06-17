@@ -53,6 +53,10 @@ function pct(value: number) {
   return `${Math.round(value * 100)}%`;
 }
 
+function titleize(value: string) {
+  return value.replaceAll("_", " ");
+}
+
 export default function HomePage() {
   const [mode, setMode] = useState<"user" | "repo">("user");
   const [subject, setSubject] = useState("vercel/next.js");
@@ -73,6 +77,8 @@ export default function HomePage() {
     if (!query) return repos;
     return repos.filter((repo) => repo.full_name.toLowerCase().includes(query));
   }, [repoSearch, repos]);
+
+  const selectedRepoPreview = selectedRepos.slice(0, 4);
 
   async function loadGithubRepos() {
     setLoadingRepos(true);
@@ -100,7 +106,9 @@ export default function HomePage() {
       setConnectedUsername(payload.username);
       setRepos(payload.repos);
       setSelectedRepos((current) =>
-        current.length ? current.filter((repo) => payload.repos!.some((item) => item.full_name === repo)) : payload.repos!.slice(0, 6).map((repo) => repo.full_name)
+        current.length
+          ? current.filter((repo) => payload.repos!.some((item) => item.full_name === repo))
+          : payload.repos!.slice(0, 6).map((repo) => repo.full_name)
       );
       setConnectingError(null);
     } catch (caughtError) {
@@ -233,13 +241,14 @@ export default function HomePage() {
 
   const summary = report?.summary;
   const topCommits = report?.top_commits ?? [];
+  const detailedCommits = report?.commits.slice(0, 6) ?? [];
   const breakdown = summary ? Object.entries(summary.commit_label_breakdown) : [];
   const fileBreakdown = summary
     ? Object.entries(summary.file_type_breakdown).filter(([, count]) => count > 0)
     : [];
 
   return (
-    <main className="shell">
+    <main className="shell shell-wide">
       <header className="header">
         <span className="brand">gitgrade</span>
         <div className="header-links">
@@ -250,141 +259,208 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="hero">
-        <h1>Measure GitHub work by impact, not activity.</h1>
-        <p className="hero-sub">
-          Connect GitHub, choose the repositories that matter, and score engineering
-          work from commit structure instead of raw activity.
-        </p>
+      <section className="hero hero-grid">
+        <div className="hero-copy">
+          <p className="eyebrow">Engineering Signal</p>
+          <h1>Measure GitHub work by impact, not activity.</h1>
+          <p className="hero-sub">
+            Connect GitHub, choose the repositories that matter, and score engineering
+            work from commit structure instead of raw activity.
+          </p>
 
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="mode-toggle">
-            <button
-              className={mode === "user" ? "mode-btn active" : "mode-btn"}
-              onClick={() => setMode("user")}
-              type="button"
-            >
-              User
-            </button>
-            <button
-              className={mode === "repo" ? "mode-btn active" : "mode-btn"}
-              onClick={() => {
-                setMode("repo");
-                setSubject("vercel/next.js");
-              }}
-              type="button"
-            >
-              Repo
-            </button>
+          <div className="hero-points">
+            <div className="hero-point">
+              <span className="hero-point-value">{connectedUsername ? selectedRepos.length : "∞"}</span>
+              <span className="hero-point-label">
+                {connectedUsername ? "repos selected" : "repo-aware scoring"}
+              </span>
+            </div>
+            <div className="hero-point">
+              <span className="hero-point-value">{summary?.overall_grade ?? "A→F"}</span>
+              <span className="hero-point-label">report grade</span>
+            </div>
+            <div className="hero-point">
+              <span className="hero-point-value">{summary ? summary.total_commits : 40}</span>
+              <span className="hero-point-label">commits sampled</span>
+            </div>
           </div>
+        </div>
 
-          {mode === "user" ? (
-            <div className="user-connect-panel">
-              {!connectedUsername ? (
-                <div className="connect-actions">
-                  <button className="btn-primary" onClick={handleConnectGithub} type="button">
-                    Connect GitHub
-                  </button>
-                  <p className="helper-text">
-                    Install the GitHub App, authorize it, and GitGrade will load the repositories
-                    you granted access to.
-                  </p>
-                </div>
-              ) : null}
+        <div className="hero-panel">
+          <form className="form form-wide" onSubmit={handleSubmit}>
+            <div className="mode-toggle">
+              <button
+                className={mode === "user" ? "mode-btn active" : "mode-btn"}
+                onClick={() => setMode("user")}
+                type="button"
+              >
+                User
+              </button>
+              <button
+                className={mode === "repo" ? "mode-btn active" : "mode-btn"}
+                onClick={() => {
+                  setMode("repo");
+                  setSubject("vercel/next.js");
+                }}
+                type="button"
+              >
+                Repo
+              </button>
+            </div>
 
-              {loadingRepos ? <p className="helper-text">Loading GitHub repositories...</p> : null}
-
-              {connectedUsername ? (
-                <div className="connected-state">
-                  <div className="connected-header">
-                    <p className="status-line ok">
-                      Connected as <strong>{connectedUsername}</strong>
+            {mode === "user" ? (
+              <div className="user-connect-panel">
+                {!connectedUsername ? (
+                  <div className="connect-actions">
+                    <button className="btn-primary" onClick={handleConnectGithub} type="button">
+                      Connect GitHub
+                    </button>
+                    <p className="helper-text">
+                      Install the GitHub App, authorize it, and GitGrade will load the repositories
+                      you granted access to.
                     </p>
-                    <button className="btn-secondary" onClick={handleDisconnectGithub} type="button">
-                      Disconnect
-                    </button>
                   </div>
+                ) : null}
 
-                  <div className="repo-toolbar">
-                    <input
-                      className="text-input"
-                      onChange={(e) => setRepoSearch(e.target.value)}
-                      placeholder="Filter repositories"
-                      value={repoSearch}
-                    />
-                    <button className="btn-secondary" onClick={selectVisibleRepos} type="button">
-                      Select visible
-                    </button>
-                    <button className="btn-secondary" onClick={clearSelectedRepos} type="button">
-                      Clear
-                    </button>
+                {loadingRepos ? (
+                  <div className="loading-panel">
+                    <div className="spinner" />
+                    <div>
+                      <p className="loading-title">Loading GitHub repositories</p>
+                      <p className="helper-text">Pulling installations and accessible repos into the workspace.</p>
+                    </div>
                   </div>
+                ) : null}
 
-                  <div className="repo-picker">
-                    {filteredRepos.length ? (
-                      filteredRepos.map((repo) => {
-                        const checked = selectedRepos.includes(repo.full_name);
-                        return (
-                          <label className={checked ? "repo-option selected" : "repo-option"} key={repo.id}>
-                            <input
-                              checked={checked}
-                              onChange={() => toggleRepo(repo.full_name)}
-                              type="checkbox"
-                            />
-                            <div className="repo-meta">
-                              <span className="repo-name">{repo.full_name}</span>
-                              <span className="repo-detail">
-                                {repo.private ? "Private" : "Public"} · {repo.target_type.toLowerCase()} · updated{" "}
-                                {new Date(repo.updated_at).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </label>
-                        );
-                      })
-                    ) : (
-                      <p className="empty-state">No repositories match the current filter.</p>
-                    )}
+                {connectedUsername ? (
+                  <div className="connected-state">
+                    <div className="connected-header">
+                      <div>
+                        <p className="status-line ok">
+                          Connected as <strong>{connectedUsername}</strong>
+                        </p>
+                        <p className="helper-text">
+                          {repos.length} accessible repos across your current installations.
+                        </p>
+                      </div>
+                      <button className="btn-secondary" onClick={handleDisconnectGithub} type="button">
+                        Disconnect
+                      </button>
+                    </div>
+
+                    <div className="repo-toolbar">
+                      <input
+                        className="text-input"
+                        onChange={(e) => setRepoSearch(e.target.value)}
+                        placeholder="Filter repositories"
+                        value={repoSearch}
+                      />
+                      <button className="btn-secondary" onClick={selectVisibleRepos} type="button">
+                        Select visible
+                      </button>
+                      <button className="btn-secondary" onClick={clearSelectedRepos} type="button">
+                        Clear
+                      </button>
+                    </div>
+
+                    <div className="selection-strip">
+                      {selectedRepoPreview.length ? (
+                        selectedRepoPreview.map((repo) => <span className="selection-pill" key={repo}>{repo}</span>)
+                      ) : (
+                        <span className="selection-pill muted">No repositories selected</span>
+                      )}
+                      {selectedRepos.length > selectedRepoPreview.length ? (
+                        <span className="selection-pill muted">+{selectedRepos.length - selectedRepoPreview.length} more</span>
+                      ) : null}
+                    </div>
+
+                    <div className="repo-picker">
+                      {filteredRepos.length ? (
+                        filteredRepos.map((repo) => {
+                          const checked = selectedRepos.includes(repo.full_name);
+                          return (
+                            <label className={checked ? "repo-option selected" : "repo-option"} key={repo.id}>
+                              <input
+                                checked={checked}
+                                onChange={() => toggleRepo(repo.full_name)}
+                                type="checkbox"
+                              />
+                              <div className="repo-meta">
+                                <span className="repo-name">{repo.full_name}</span>
+                                <span className="repo-detail">
+                                  {repo.private ? "Private" : "Public"} · {repo.target_type.toLowerCase()} · updated{" "}
+                                  {new Date(repo.updated_at).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </label>
+                          );
+                        })
+                      ) : (
+                        <p className="empty-state">No repositories match the current filter.</p>
+                      )}
+                    </div>
+
+                    <p className="helper-text">
+                      {selectedRepos.length} repositories selected. Up to 20 feed one analysis run.
+                    </p>
                   </div>
+                ) : null}
 
-                  <p className="helper-text">
-                    {selectedRepos.length} repositories selected. Up to 50 are sent per analysis run.
-                  </p>
-                </div>
-              ) : null}
+                {connectingError ? <p className="status-line error">{connectingError}</p> : null}
+              </div>
+            ) : (
+              <div className="input-row">
+                <input
+                  className="text-input"
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="owner/repo"
+                  value={subject}
+                />
+              </div>
+            )}
 
-              {connectingError ? <p className="status-line error">{connectingError}</p> : null}
+            <div className="form-actions">
+              <button
+                className="btn-primary"
+                disabled={
+                  loading ||
+                  (mode === "repo" ? !subject.trim() : loadingRepos || !connectedUsername || selectedRepos.length === 0)
+                }
+                type="submit"
+              >
+                {loading ? "Analyzing..." : "Analyze"}
+              </button>
+              <button className="btn-secondary" disabled={!report || saving} onClick={handleSaveReport} type="button">
+                {saving ? "Saving..." : "Save"}
+              </button>
             </div>
-          ) : (
-            <div className="input-row">
-              <input
-                className="text-input"
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="owner/repo"
-                value={subject}
-              />
-            </div>
-          )}
 
-          <div className="form-actions">
-            <button
-              className="btn-primary"
-              disabled={
-                loading ||
-                (mode === "repo" ? !subject.trim() : loadingRepos || !connectedUsername || selectedRepos.length === 0)
-              }
-              type="submit"
-            >
-              {loading ? "Running..." : "Analyze"}
-            </button>
-            <button className="btn-secondary" disabled={!report || saving} onClick={handleSaveReport} type="button">
-              {saving ? "Saving..." : "Save"}
-            </button>
-          </div>
-
-          {error ? <p className="status-line error">{error}</p> : null}
-          {saveMessage ? <p className="status-line ok">{saveMessage}</p> : null}
-        </form>
+            {error ? <p className="status-line error">{error}</p> : null}
+            {saveMessage ? <p className="status-line ok">{saveMessage}</p> : null}
+          </form>
+        </div>
       </section>
+
+      {loading ? (
+        <section className="analysis-loading">
+          <div className="analysis-loading-header">
+            <div className="spinner spinner-lg" />
+            <div>
+              <p className="card-label">Running analysis</p>
+              <h2>Scoring commit structure and repository signal</h2>
+              <p className="card-body">
+                Pulling commit history, weighing file mix, and ranking the strongest signals.
+              </p>
+            </div>
+          </div>
+          <div className="loading-grid">
+            <div className="skeleton-card" />
+            <div className="skeleton-card" />
+            <div className="skeleton-card" />
+            <div className="skeleton-card skeleton-card-wide" />
+          </div>
+        </section>
+      ) : null}
 
       <div className="divider" />
 
@@ -407,74 +483,132 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="grid">
-        <div className="card">
-          <p className="card-label">Report</p>
-          <h2>{report?.subject_name ?? "No analysis yet"}</h2>
-          <p className="card-body">
-            {summary
-              ? `${summary.total_commits} commits analyzed. ${summary.strongest_signal.replaceAll("_", " ")} leads. ${summary.weakest_signal.replaceAll("_", " ")} lags.`
-              : "Connect GitHub and select repositories, or analyze a single repo directly."}
-          </p>
-          {summary?.weak_signal_patterns?.length ? (
-            <ul className="tag-list">
-              {summary.weak_signal_patterns.slice(0, 3).map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
+      <div className="results-layout">
+        <div className="results-main">
+          <div className="grid">
+            <div className="card card-emphasis">
+              <p className="card-label">Report</p>
+              <h2>{report?.subject_name ?? "No analysis yet"}</h2>
+              <p className="card-body">
+                {summary
+                  ? `${summary.total_commits} commits analyzed. ${titleize(summary.strongest_signal)} leads. ${titleize(summary.weakest_signal)} lags.`
+                  : "Connect GitHub and select repositories, or analyze a single repo directly."}
+              </p>
+              {summary?.weak_signal_patterns?.length ? (
+                <ul className="tag-list">
+                  {summary.weak_signal_patterns.slice(0, 4).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
 
-        <div className="card">
-          <p className="card-label">Commit mix</p>
-          <div className="data-rows">
-            {breakdown.length ? (
-              breakdown.map(([label, count]) => (
-                <div className="data-row" key={label}>
-                  <span>{label.replaceAll("_", " ")}</span>
-                  <strong>{count}</strong>
-                </div>
-              ))
-            ) : (
-              <p className="empty-state">No data yet.</p>
-            )}
+            <div className="card">
+              <p className="card-label">Commit mix</p>
+              <div className="data-rows">
+                {breakdown.length ? (
+                  breakdown.map(([label, count]) => (
+                    <div className="data-row" key={label}>
+                      <span>{titleize(label)}</span>
+                      <strong>{count}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <p className="empty-state">No data yet.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="card">
+              <p className="card-label">File weight</p>
+              <div className="data-rows">
+                {fileBreakdown.length ? (
+                  fileBreakdown.slice(0, 6).map(([label, count]) => (
+                    <div className="data-row" key={label}>
+                      <span>{titleize(label)}</span>
+                      <strong>{count}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <p className="empty-state">No data yet.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="card card-wide">
+              <p className="card-label">Top commits</p>
+              <div className="commit-rows">
+                {topCommits.length ? (
+                  topCommits.slice(0, 5).map((commit) => (
+                    <div className="commit-row" key={commit.sha}>
+                      <div>
+                        <p className="commit-msg">{commit.message}</p>
+                        <span className="commit-tag">{titleize(commit.predicted_label)}</span>
+                      </div>
+                      <span className="commit-score">{commit.score}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="empty-state">High-signal commits appear here after analysis.</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="card">
-          <p className="card-label">File weight</p>
-          <div className="data-rows">
-            {fileBreakdown.length ? (
-              fileBreakdown.slice(0, 6).map(([label, count]) => (
-                <div className="data-row" key={label}>
-                  <span>{label.replaceAll("_", " ")}</span>
-                  <strong>{count}</strong>
+        <aside className="results-side">
+          <div className="card side-card">
+            <p className="card-label">Signal readout</p>
+            {summary ? (
+              <div className="signal-stack">
+                <div className="signal-item">
+                  <span className="signal-name">Overall score</span>
+                  <strong>{summary.overall_score.toFixed(1)}</strong>
                 </div>
-              ))
+                <div className="signal-item">
+                  <span className="signal-name">Average commit</span>
+                  <strong>{summary.average_commit_score.toFixed(1)}</strong>
+                </div>
+                <div className="signal-item">
+                  <span className="signal-name">Meaningful commits</span>
+                  <strong>{summary.meaningful_commits}/{summary.total_commits}</strong>
+                </div>
+                <div className="signal-item">
+                  <span className="signal-name">Inflation ratio</span>
+                  <strong>{summary.commit_inflation_ratio.toFixed(2)}</strong>
+                </div>
+              </div>
             ) : (
-              <p className="empty-state">No data yet.</p>
+              <p className="empty-state">Summary diagnostics appear here after analysis.</p>
             )}
           </div>
-        </div>
 
-        <div className="card card-wide">
-          <p className="card-label">Top commits</p>
-          <div className="commit-rows">
-            {topCommits.length ? (
-              topCommits.slice(0, 5).map((commit) => (
-                <div className="commit-row" key={commit.sha}>
-                  <div>
-                    <p className="commit-msg">{commit.message}</p>
-                    <span className="commit-tag">{commit.predicted_label.replaceAll("_", " ")}</span>
+          <div className="card side-card">
+            <p className="card-label">Detailed commits</p>
+            {detailedCommits.length ? (
+              <div className="detailed-commit-list">
+                {detailedCommits.map((commit) => (
+                  <div className="detailed-commit" key={commit.sha}>
+                    <div className="detailed-commit-top">
+                      <p className="commit-msg">{commit.message}</p>
+                      <span className="commit-score">{commit.score}</span>
+                    </div>
+                    <p className="commit-tag">
+                      {titleize(commit.predicted_label)} · confidence {Math.round(commit.confidence * 100)}%
+                    </p>
+                    <ul className="rationale-list">
+                      {commit.rationale.slice(0, 3).map((reason) => (
+                        <li key={reason}>{reason}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <span className="commit-score">{commit.score}</span>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <p className="empty-state">High-signal commits appear here after analysis.</p>
+              <p className="empty-state">Commit rationale appears here after analysis.</p>
             )}
           </div>
-        </div>
+        </aside>
       </div>
     </main>
   );
