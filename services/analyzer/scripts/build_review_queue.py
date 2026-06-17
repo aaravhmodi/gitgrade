@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
         default=Path("../../datasets/reviews/manual_labels.jsonl"),
     )
     parser.add_argument("--per-label", type=int, default=20)
+    parser.add_argument("--target-total", type=int, default=None)
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
 
@@ -45,16 +46,32 @@ def main() -> None:
         buckets[row["label"]].append(row)
 
     queue: list[dict] = []
+    selected_keys: set[tuple[str, str]] = set()
     for label, items in buckets.items():
         sample_size = min(args.per_label, len(items))
-        queue.extend(random.sample(items, sample_size))
+        sampled = random.sample(items, sample_size)
+        queue.extend(sampled)
+        selected_keys.update((row["repo"], row["sha"]) for row in sampled)
+
+    if args.target_total is not None and len(queue) < args.target_total:
+        remaining = [
+            row
+            for row in rows
+            if (row["repo"], row["sha"]) not in already_reviewed
+            and (row["repo"], row["sha"]) not in selected_keys
+        ]
+        random.shuffle(remaining)
+        needed = args.target_total - len(queue)
+        queue.extend(remaining[:needed])
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text("", encoding="utf-8")
     for row in queue:
         append_jsonl(args.output, row)
 
-    counts = {label: min(args.per_label, len(items)) for label, items in buckets.items()}
+    counts: dict[str, int] = defaultdict(int)
+    for row in queue:
+        counts[row["label"]] += 1
     print(f"Wrote {len(queue)} review items to {args.output}")
     print(json.dumps(counts, indent=2))
 

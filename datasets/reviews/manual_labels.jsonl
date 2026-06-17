@@ -33,3 +33,5 @@
 {"repo": "vercel/next.js", "sha": "828e1ca9b7e70e82db7317356d2ab546e4a9eae4", "weak_label": "noise", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
 {"repo": "fastapi/fastapi", "sha": "a82e5f2fac102a8b12c0795da80b2cb1d2a8b016", "weak_label": "noise", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
 {"repo": "vercel/next.js", "sha": "d80732585bbc028bc1032eadd9b99847083d7dc4", "weak_label": "noise", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "vercel/next.js", "sha": "5c27d82bfb4f0374b00823665bfc55db15d28f8c", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "vercel/next.js", "sha": "b08fb8d92260fb7c3929f6ed5284de9a561a7c87", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
