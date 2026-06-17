@@ -270,12 +270,27 @@ export default function HomePage() {
 
       <section className="hero hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow">Engineering Signal</p>
-          <h1>Measure GitHub work by impact, not activity.</h1>
+          <p className="eyebrow">Recruiter View</p>
+          <h1>100 commits a day does not prove a strong engineer.</h1>
           <p className="hero-sub">
-            Connect GitHub, choose the repositories that matter, and score engineering
-            work from commit structure instead of raw activity.
+            As a recruiter, raw commit volume does not tell you whether the work is genuine.
+            Use this ML-based tool to inspect commit quality, file mix, and implementation depth.
           </p>
+
+          <div className="hero-proof">
+            <div className="hero-proof-item">
+              <strong>Looks past activity spam</strong>
+              <span>Discounts tiny diffs, docs-only churn, generated files, and repetitive noise.</span>
+            </div>
+            <div className="hero-proof-item">
+              <strong>Checks real engineering signal</strong>
+              <span>Rewards source-heavy work, test coverage, multi-file implementation, and stronger commit structure.</span>
+            </div>
+            <div className="hero-proof-item">
+              <strong>Turns history into a readout</strong>
+              <span>Summarizes meaningful ratio, padding risk, strongest signal, weakest signal, and top commits.</span>
+            </div>
+          </div>
 
           <div className="hero-points">
             <div className="hero-point">

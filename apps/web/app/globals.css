@@ -94,6 +94,10 @@ input {
   grid-template-columns: minmax(420px, 1fr) minmax(420px, 0.96fr);
   gap: 14px;
   align-items: start;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--glow), var(--surface);
 }
 
 .hero-copy {
@@ -101,6 +105,7 @@ input {
   display: grid;
   align-content: start;
   gap: 10px;
+  padding-right: 12px;
 }
 
 .hero h1 {
@@ -117,6 +122,33 @@ input {
   color: var(--text-muted);
   max-width: 56ch;
   line-height: 1.7;
+}
+
+.hero-proof {
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.hero-proof-item {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--border-focus);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0 10px 10px 0;
+}
+
+.hero-proof-item strong {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.hero-proof-item span {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
 }
 
 .hero-points {
@@ -149,7 +181,7 @@ input {
 }
 
 .hero-panel {
-  background: var(--glow), var(--surface);
+  background: rgba(0, 0, 0, 0.16);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 20px;
@@ -849,6 +881,10 @@ input {
     grid-template-columns: 1fr;
   }
 
+  .hero-copy {
+    padding-right: 0;
+  }
+
   .results-side {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -866,6 +902,10 @@ input {
   .shell,
   .shell-wide {
     width: min(100vw - 28px, 100%);
+  }
+
+  .hero-grid {
+    padding: 14px;
   }
 
   .header {
