@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
@@ -12,6 +13,13 @@ from typing import Any
 class GithubCommitSource:
     owner: str
     repo: str
+
+
+class GithubApiError(RuntimeError):
+    def __init__(self, status_code: int, message: str) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.message = message
 
 
 class GithubClient:
@@ -28,8 +36,19 @@ class GithubClient:
                 **({"Authorization": f"Bearer {self.token}"} if self.token else {}),
             },
         )
-        with urllib.request.urlopen(request) as response:
-            return json.loads(response.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(request) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as error:
+            body = error.read().decode("utf-8", errors="replace")
+            message = body
+            try:
+                parsed = json.loads(body)
+                if isinstance(parsed, dict):
+                    message = parsed.get("message") or parsed.get("error") or body
+            except json.JSONDecodeError:
+                pass
+            raise GithubApiError(error.code, message) from error
 
     def fetch_recent_commits(self, source: GithubCommitSource, limit: int = 100) -> list[dict[str, Any]]:
         per_page = min(limit, 100)

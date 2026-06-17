@@ -2,18 +2,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import logging
-import traceback
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from .analysis import analyze_commit_features, analyze_repo, analyze_user
-from .github_client import GithubClient
+from .github_client import GithubApiError, GithubClient
 from .models import AnalyzeRepoRequest, AnalyzeUserRequest, CommitFeatures, GitGradeReport
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="GitGrade Analyzer", version="0.1.0")
+
+
+@app.exception_handler(GithubApiError)
+def github_api_error_handler(_: Request, exc: GithubApiError) -> JSONResponse:
+    status = exc.status_code if exc.status_code in {401, 403, 404, 422, 429} else 502
+    return JSONResponse(status_code=status, content={"error": exc.message})
 
 
 @app.get("/health")
