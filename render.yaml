@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: gitgrade-analyzer
+    runtime: python
+    rootDir: services/analyzer
+    plan: starter
+    buildCommand: pip install .
+    startCommand: uvicorn gitgrade_analyzer.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
