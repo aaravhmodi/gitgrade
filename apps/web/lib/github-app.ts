@@ -16,6 +16,15 @@ type GithubAppConfig = {
   callbackUrl: string;
 };
 
+const REQUIRED_GITHUB_APP_ENV_KEYS = [
+  "GITHUB_APP_ID",
+  "GITHUB_APP_CLIENT_ID",
+  "GITHUB_APP_CLIENT_SECRET",
+  "GITHUB_APP_PRIVATE_KEY",
+  "GITHUB_APP_WEBHOOK_SECRET",
+  "GITHUB_APP_SLUG",
+] as const;
+
 export type GithubSession = {
   accessToken: string;
   refreshToken: string | null;
@@ -56,10 +65,19 @@ export function getGithubAppConfig(): GithubAppConfig | null {
   };
 }
 
+export function getMissingGithubAppConfigKeys() {
+  return REQUIRED_GITHUB_APP_ENV_KEYS.filter((key) => !process.env[key]);
+}
+
 function requireGithubAppConfig() {
   const config = getGithubAppConfig();
   if (!config) {
-    throw new Error("GitHub App is not configured.");
+    const missingKeys = getMissingGithubAppConfigKeys();
+    throw new Error(
+      missingKeys.length
+        ? `GitHub App is not configured. Missing: ${missingKeys.join(", ")}`
+        : "GitHub App is not configured."
+    );
   }
   return config;
 }

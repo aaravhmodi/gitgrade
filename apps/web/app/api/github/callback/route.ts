@@ -1,13 +1,16 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { createSessionFromCode, getGithubAppConfig, persistGithubSession } from "@/lib/github-app";
+import { createSessionFromCode, getGithubAppConfig, getMissingGithubAppConfigKeys, persistGithubSession } from "@/lib/github-app";
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
 export async function GET(request: NextRequest) {
   if (!getGithubAppConfig()) {
-    return NextResponse.json({ error: "GitHub App is not configured." }, { status: 500 });
+    return NextResponse.json(
+      { error: `GitHub App is not configured. Missing: ${getMissingGithubAppConfigKeys().join(", ")}` },
+      { status: 500 }
+    );
   }
 
   const code = request.nextUrl.searchParams.get("code");

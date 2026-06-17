@@ -6,13 +6,17 @@ import {
   getGithubAppConfig,
   getGithubSession,
   getInstallationRepositories,
+  getMissingGithubAppConfigKeys,
 } from "@/lib/github-app";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   if (!getGithubAppConfig()) {
-    return NextResponse.json({ error: "GitHub App is not configured." }, { status: 500 });
+    return NextResponse.json(
+      { error: `GitHub App is not configured. Missing: ${getMissingGithubAppConfigKeys().join(", ")}` },
+      { status: 500 }
+    );
   }
 
   const session = await getGithubSession();

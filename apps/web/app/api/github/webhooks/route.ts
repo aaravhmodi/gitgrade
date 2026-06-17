@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { clearGithubSession, getGithubAppConfig, verifyGithubWebhookSignature } from "@/lib/github-app";
+import { clearGithubSession, getGithubAppConfig, getMissingGithubAppConfigKeys, verifyGithubWebhookSignature } from "@/lib/github-app";
 
 export async function POST(request: NextRequest) {
   if (!getGithubAppConfig()) {
-    return NextResponse.json({ error: "GitHub App is not configured." }, { status: 500 });
+    return NextResponse.json(
+      { error: `GitHub App is not configured. Missing: ${getMissingGithubAppConfigKeys().join(", ")}` },
+      { status: 500 }
+    );
   }
 
   const payload = await request.text();
