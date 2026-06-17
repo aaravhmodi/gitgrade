@@ -103,6 +103,63 @@ a {
   color: var(--muted);
 }
 
+.analyze-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 10px;
+}
+
+.toggle,
+.submit-button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.88);
+  color: var(--text);
+  padding: 10px 16px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle.active,
+.submit-button {
+  background: var(--accent);
+  color: #f8f3ea;
+  border-color: transparent;
+}
+
+.input-label {
+  font-size: 0.86rem;
+  color: var(--accent-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.text-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  font: inherit;
+  background: rgba(255, 250, 241, 0.88);
+  color: var(--text);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.error-text,
+.empty-state {
+  color: #9a3f21;
+  margin: 8px 0 0;
+}
+
 .hero-card li,
 .report-card li {
   margin-top: 8px;
