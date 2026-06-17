@@ -1,7 +1,14 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { createSessionFromCode, getGithubAppConfig, getMissingGithubAppConfigKeys, persistGithubSession } from "@/lib/github-app";
+import {
+  buildGithubInstallUrl,
+  createSessionFromCode,
+  getAuthorizedInstallations,
+  getGithubAppConfig,
+  getMissingGithubAppConfigKeys,
+  persistGithubSession,
+} from "@/lib/github-app";
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
@@ -16,6 +23,8 @@ export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
   const error = request.nextUrl.searchParams.get("error");
   const errorDescription = request.nextUrl.searchParams.get("error_description");
+  const installationId = request.nextUrl.searchParams.get("installation_id");
+  const setupAction = request.nextUrl.searchParams.get("setup_action");
 
   if (error) {
     const redirect = new URL("/", request.url);
@@ -24,14 +33,25 @@ export async function GET(request: NextRequest) {
   }
 
   if (!code) {
+    if (installationId || setupAction) {
+      const redirect = new URL("/", request.url);
+      redirect.searchParams.set("github_connected", "1");
+      return NextResponse.redirect(redirect);
+    }
+
     return NextResponse.json({ error: "Missing GitHub authorization code." }, { status: 400 });
   }
 
   try {
     const session = await createSessionFromCode(code);
     await persistGithubSession(session);
+    const installations = await getAuthorizedInstallations(session.accessToken);
     const cookieStore = await cookies();
     cookieStore.delete(INSTALL_COOKIE);
+
+    if (!installations.installations.length) {
+      return NextResponse.redirect(buildGithubInstallUrl());
+    }
 
     const redirect = new URL("/", request.url);
     redirect.searchParams.set("github_connected", "1");

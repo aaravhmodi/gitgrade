@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { buildGithubInstallUrl, createInstallNonce, getGithubAppConfig, getMissingGithubAppConfigKeys } from "@/lib/github-app";
+import { buildGithubAuthorizeUrl, createInstallNonce, getGithubAppConfig, getMissingGithubAppConfigKeys } from "@/lib/github-app";
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
@@ -23,5 +23,5 @@ export async function GET() {
     maxAge: 60 * 10,
   });
 
-  return NextResponse.redirect(buildGithubInstallUrl());
+  return NextResponse.redirect(buildGithubAuthorizeUrl());
 }
