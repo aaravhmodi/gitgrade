@@ -4,6 +4,39 @@ import { getGithubSession } from "@/lib/github-app";
 
 const ANALYZER_URL = process.env.ANALYZER_URL ?? "http://127.0.0.1:8010";
 
+function extractAnalyzerError(payload: unknown, fallback: string) {
+  if (!payload || typeof payload !== "object") {
+    return fallback;
+  }
+
+  const objectPayload = payload as {
+    error?: string;
+    detail?: Array<{ msg?: string } | string> | string;
+  };
+
+  if (typeof objectPayload.error === "string" && objectPayload.error.trim()) {
+    return objectPayload.error;
+  }
+
+  if (typeof objectPayload.detail === "string" && objectPayload.detail.trim()) {
+    return objectPayload.detail;
+  }
+
+  if (Array.isArray(objectPayload.detail) && objectPayload.detail.length) {
+    return objectPayload.detail
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        return item.msg ?? "";
+      })
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  return fallback;
+}
+
 type RouteContext = {
   params: {
     mode: string;
@@ -37,8 +70,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    return NextResponse.json({ error: text || "Analyzer request failed." }, { status: response.status });
+    const payload = await response.json().catch(() => null);
+    return NextResponse.json(
+      { error: extractAnalyzerError(payload, "Analyzer request failed.") },
+      { status: response.status }
+    );
   }
 
   return NextResponse.json(await response.json(), { status: 200 });
