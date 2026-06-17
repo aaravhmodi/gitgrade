@@ -45,6 +45,19 @@ class GithubClient:
     def fetch_user_profile(self, username: str) -> dict[str, Any]:
         return self._get_json(f"https://api.github.com/users/{urllib.parse.quote(username)}")
 
+    def fetch_authenticated_user(self) -> dict[str, Any]:
+        return self._get_json("https://api.github.com/user")
+
     def fetch_user_repositories(self, username: str, per_page: int = 100) -> list[dict[str, Any]]:
         query = urllib.parse.urlencode({"per_page": min(per_page, 100), "sort": "updated"})
         return self._get_json(f"https://api.github.com/users/{urllib.parse.quote(username)}/repos?{query}")
+
+    def fetch_authenticated_user_repositories(self, per_page: int = 100) -> list[dict[str, Any]]:
+        query = urllib.parse.urlencode(
+            {
+                "per_page": min(per_page, 100),
+                "sort": "updated",
+                "affiliation": "owner,collaborator,organization_member",
+            }
+        )
+        return self._get_json(f"https://api.github.com/user/repos?{query}")

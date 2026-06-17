@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from .analysis import analyze_commit_features, analyze_repo, analyze_user
+from .github_client import GithubClient
 from .models import AnalyzeRepoRequest, AnalyzeUserRequest, CommitFeatures, GitGradeReport
 
 logging.basicConfig(level=logging.INFO)
@@ -56,4 +57,12 @@ def analyze_repo_endpoint(payload: AnalyzeRepoRequest) -> GitGradeReport:
 
 @app.post("/analyze/user", response_model=GitGradeReport)
 def analyze_user_endpoint(payload: AnalyzeUserRequest) -> GitGradeReport:
-    return analyze_user(payload.username, payload.repo_limit, payload.commits_per_repo)
+    client = GithubClient(token=payload.github_token) if payload.github_token else None
+
+    return analyze_user(
+        payload.username,
+        payload.repo_limit,
+        payload.commits_per_repo,
+        selected_repo_slugs=payload.selected_repos,
+        client=client,
+    )

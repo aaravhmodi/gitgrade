@@ -67,8 +67,10 @@ class AnalyzeRepoRequest(BaseModel):
 
 class AnalyzeUserRequest(BaseModel):
     username: str
+    selected_repos: list[str] = Field(default_factory=list, max_length=50)
     repo_limit: int = Field(default=6, ge=1, le=20)
     commits_per_repo: int = Field(default=40, ge=1, le=150)
+    github_token: str | None = None
 
 
 def top_meaningful_ratio(commits: Sequence[CommitPrediction]) -> float:

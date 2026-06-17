@@ -257,10 +257,25 @@ def analyze_repo(repo_slug: str, commit_limit: int, client: GithubClient | None 
     return analyze_commit_features("repository", repo_slug, features)
 
 
-def analyze_user(username: str, repo_limit: int, commits_per_repo: int, client: GithubClient | None = None) -> GitGradeReport:
+def analyze_user(
+    username: str,
+    repo_limit: int,
+    commits_per_repo: int,
+    selected_repo_slugs: list[str] | None = None,
+    client: GithubClient | None = None,
+) -> GitGradeReport:
     github = client or GithubClient()
-    repos = github.fetch_user_repositories(username, per_page=min(repo_limit, 100))
-    selected_repos = [repo for repo in repos if not repo.get("fork")][:repo_limit]
+    selected_repo_slugs = selected_repo_slugs or []
+
+    if selected_repo_slugs:
+        selected_repos = [
+            {"full_name": repo_slug}
+            for repo_slug in selected_repo_slugs[:50]
+        ]
+    else:
+        repos = github.fetch_user_repositories(username, per_page=min(repo_limit, 100))
+        selected_repos = [repo for repo in repos if not repo.get("fork")][:repo_limit]
+
     features: list[CommitFeatures] = []
 
     for repo in selected_repos:
