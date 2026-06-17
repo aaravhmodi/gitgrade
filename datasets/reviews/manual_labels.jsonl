@@ -35,3 +35,198 @@
 {"repo": "vercel/next.js", "sha": "d80732585bbc028bc1032eadd9b99847083d7dc4", "weak_label": "noise", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
 {"repo": "vercel/next.js", "sha": "5c27d82bfb4f0374b00823665bfc55db15d28f8c", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
 {"repo": "vercel/next.js", "sha": "b08fb8d92260fb7c3929f6ed5284de9a561a7c87", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "4f60df1177d0d10363881eb47c70f8890610c4c1", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "one file changed with minimal line changes"}
+{"repo": "payloadcms/payload", "sha": "764c6f008687b39fd1127800008e4aebc366bd85", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "barely any lines"}
+{"repo": "danvergara/dblab", "sha": "d646192209b4a7b84a51812a03898be5abe79b97", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "version change, minimal"}
+{"repo": "Agoric/agoric-sdk", "sha": "418814c69e21591d17bd7f715ffabacfd4208fb2", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small bug fix it seems"}
+{"repo": "Agoric/agoric-sdk", "sha": "42b3d4ee67e3428ba0e1b6d9a6fe24fdfbcd4a93", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "noise"}
+{"repo": "Agoric/agoric-sdk", "sha": "d3ba4233697e0613895c8c0235d3898f5ad67153", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small change"}
+{"repo": "algolia/instantsearch", "sha": "c8274e2ee556b83dae0e7c11666ad795df706cfd", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "smal change"}
+{"repo": "intel/compute-runtime", "sha": "9a44ac67796638ab48b2d7b1f0a014c27b3319d3", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small change"}
+{"repo": "gatsbyjs/gatsby", "sha": "6d0e1adb02eee50f03e602a2e3c0805b3a16e545", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small change"}
+{"repo": "ekristen/aws-nuke", "sha": "b3bcab270ad7f6d8f87b435597d986dd27efd869", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "noise"}
+{"repo": "puppeteer/puppeteer", "sha": "dbce329aecbed937b5e16510547ebc2d6ee16c1f", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small change"}
+{"repo": "thi-ng/umbrella", "sha": "3e133977bfec95ab25a78fa7fd219a2a0dc2eba7", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "small chnage"}
+{"repo": "ddev/ddev", "sha": "c973686617d597a1adc9c2a224b7f0d42bd72592", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "barely any change"}
+{"repo": "cee-studio/orca", "sha": "d7f0efd1fc1bfce285f36eb4d958ac5965fdfdb7", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "bug fix"}
+{"repo": "refinedev/refine", "sha": "45fc134b88f76ece43180c1aee9dc3653f0f9322", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothing"}
+{"repo": "Agoric/agoric-sdk", "sha": "63e134ba9c9a144bdfeb26f49270e9ee3f38c717", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "barely anythign"}
+{"repo": "Agoric/agoric-sdk", "sha": "e87f8ca709a84c16b8d817520d71a3bf0fb4efc7", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "barely anything"}
+{"repo": "devspace-sh/devspace", "sha": "3a3427587f12c89103dcb8a12e97be03cfa76d33", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "barely any change, secret creation?"}
+{"repo": "Agoric/agoric-sdk", "sha": "4c46db291dd62b558679e5410dc81316231f7b62", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "barely any change"}
+{"repo": "puppeteer/puppeteer", "sha": "39e9d5e1ec9e3c28d3e7d3e7db97a504ef42c432", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "cosmos/cosmos-sdk", "sha": "217bb1001e8d8e65018c6f772749dcede0cb72a3", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": "decent chnage"}
+{"repo": "jina-ai/serve", "sha": "441966b969102ecfbd20cd32cd231d62bba91754", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": "reduction of a file/ function"}
+{"repo": "vuejs/vuepress", "sha": "ba90b6ed02ed81a85505949b61bc484bc4044cd6", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "cleanup"}
+{"repo": "millsp/ts-toolbelt", "sha": "6fb01dc2ffd3972501184d0aa4ff6083fc1bcf83", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "Agoric/agoric-sdk", "sha": "acb1b8438812681b99ebb94ba2e40b1eed4c42b2", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "instadeepai/Mava", "sha": "c7170735fec3ac36b0b37beaf9fbd043940f2472", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "withfig/autocomplete", "sha": "7458691d89bcd933ab3a7d368c5ab0fae56ddbd8", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "payloadcms/payload", "sha": "5826048e7becb8dc0aec510e03476c9f31442a59", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "Agoric/agoric-sdk", "sha": "ce82afc47a4a135cbc71478ad0d1836ad79a21f0", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "minimal fix"}
+{"repo": "jina-ai/serve", "sha": "d2e7e16bdb2c8a4d3b8466013195dba97eed0e1e", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "reduction"}
+{"repo": "celestiaorg/celestia-app", "sha": "b6acf86ae8ca37b52fb287035717535b28c6b962", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "reduction"}
+{"repo": "instadeepai/jumanji", "sha": "666d70954f1d99236f8cee5bd23560841f897f79", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothign"}
+{"repo": "oxyno-zeta/s3-proxy", "sha": "8d9d01f4d090ae0ec1c953ff14677434de4eccdb", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothing"}
+{"repo": "celestiaorg/celestia-app", "sha": "38a15036684d6dc26a0c4cab7470557252607e2b", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothign"}
+{"repo": "Agoric/agoric-sdk", "sha": "12c0300c0628154a3aa45bb21ee88ab09205cf59", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "Agoric/agoric-sdk", "sha": "047d46c3c3701f0dd46995ff0fd7223427a7f54c", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "minimal"}
+{"repo": "censys/censys-python", "sha": "a123cd9d46608174dae4068acfe76574a700da3e", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothign"}
+{"repo": "Agoric/agoric-sdk", "sha": "791df446f471b61ef961e36b96097b982ddb6f6c", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "ekristen/aws-nuke", "sha": "db0b3039e48540803f1523069bc7dac0fe518a2f", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothig"}
+{"repo": "Agoric/agoric-sdk", "sha": "8e0742e23f2d04db251f49fcfb59a7106242fc75", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": "minimall"}
+{"repo": "ddev/ddev", "sha": "b2e3801a8fed23e2cd445165a2985ebceb7a3fe8", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothign"}
+{"repo": "Cogmasters/concord", "sha": "5f144c9f844908cc9a140a9c77c3f40a925fe7e6", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": "nothgin"}
+{"repo": "payloadcms/payload", "sha": "59ff8c18f5ff602e872cc65ea03e68bf8071b20b", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "algolia/docsearch", "sha": "0d35e04614a421ee27ee641ef286e4aa9828faf0", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "54cc2b9bc00c39375646ca0171e5be76fc7f1c5d", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "fe06de2dc942908a293063605d3dd20bb06cdf3b", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "crypto-chassis/ccapi", "sha": "699077999795a3b6ffc9017f5fb6f83f78e347bd", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "b9413808c0dd7fe6d44487e41a3776608aa842fe", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "547d5d4e2724b8e87886fe0a682f5cea7fbae175", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "crypto-chassis/ccapi", "sha": "c8a631575316d8619dcf8ec74322b76732bdbd19", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "go-task/task", "sha": "7cb45a23b6a2d0c64ef56bab94003ea868a2ed06", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Flagsmith/flagsmith", "sha": "044a49d069554fa5ee362bd9b9e24b96c368dcf7", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "d269a8a3f5b5ee47d60f86343a163c9903ce6923", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "vanus-labs/vanus", "sha": "bca3ccf3f264606f04c19407d3d2e544aa71f71f", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "8bd5c39b4ab78503589ace9ad5a79761653a91c9", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-app", "sha": "7c1a237d8b20172b4887facac543ec44faa21c99", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "aws/aws-cdk", "sha": "28e08059d47c3834b175c2cef67d2963d2b2aff9", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "9a77810b1f2f0a529dd13760d0a7b73b2b50fd81", "weak_label": "medium_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "infracost/infracost", "sha": "c084470ac54715fae39bd7d7ebf869897d9478d9", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "intel/compute-runtime", "sha": "940f23ddbf9662ae434f72516ff7336b612fc7ef", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "goreleaser/goreleaser", "sha": "ceb4e52d1279db4b3d28da38ca13935918bf51ce", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "withfig/autocomplete", "sha": "e03a556e8365b315d9c2b49574b074b5fbd8f1b2", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "e9d815fa2aff6833ad8a7525d7365f2d853d3f2e", "weak_label": "medium_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "91ed882d62a5f8f0d9c3c2c9a6a0f495cdf802e1", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "instadeepai/Mava", "sha": "49b9f689dd0d885036c1377eb890b11201e25177", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "b205a19967446b59bb98173d8db82948e1913293", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "aws/aws-sdk-js-v3", "sha": "74e25df9beb4d5ea510903f513a2da153ddaee99", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "b69826a81e2f5ffc2cc393b3a97b377fa4c0d553", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "tobymao/sqlglot", "sha": "4584935cab328eced61c62a998cc013cab5cc3e3", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "446eb3508614e4bce1cac5801683e640a9744fc7", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "JanDeDobbeleer/oh-my-posh", "sha": "84ac954c86a0c0a437af9f99213a06bf715cc0c0", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "35c4243da9c8c285a4b65117238dec9b9f7921c8", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "45699e1a18ee95901e313fac6c7148373abb752e", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "06b1a2f851b7c0e133e09315d51af86465903997", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "c30fbfc7e85b28595522b75d53d439f767ab450e", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "d2ba1f99eed0ce52ce58012aed487bf775126ecc", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "electron/forge", "sha": "afa9883f5fed35a1d4df2dc935d9a2d41dffc091", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "bytedance/fedlearner", "sha": "c09db0d56d3401be8f88a7a08e30e337188f9ccb", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "6ee4a356ea052ba2ec4b2b800a7b51948a6cd3cd", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "pmndrs/jotai", "sha": "308cdba783e5d875715c385fecde973f51276c37", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "nexxtway/react-rainbow", "sha": "edc8f57b319ebfbb9e0518b6ad7d05c62e445bf1", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "censys/censys-python", "sha": "f87069f5bb593c3eb0c05ade5b174e6538d873f1", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "65a0353a073ff0d90a626b09f27f80dbad8fdfd0", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "f5938395e95f5d3cb34b1a12f9b90593159d66fd", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "48a78e764c40b8af48422405e1cd030e9b436fe7", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-node", "sha": "995dd67be18f3193b044d6905df25a10fd4ef74a", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "a-h/templ", "sha": "b6e7a779dacbddc4a185023be181fe7349e6b923", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "da382767514ad84817b7791dd235a3d1c544587e", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "5aff49d5a0c4bb7cd20e7e9e30d2e7247631f5b9", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "f3c4747994e46021ad2c71202be36678632f890f", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "b508cf46a059f042be2439683f775bf84d397dd7", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "datahub-project/datahub", "sha": "48ef215b21b0ff2d409aa792983f21600fbae53d", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "devspace-sh/devspace", "sha": "4a12963af0ab9180bb2cf7ca754ba72d43cd2268", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "8870a95bcfd47ab7cc30a0bbbc4ef128d1f64df7", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "sct/overseerr", "sha": "e88042ba28f0ec02b67f55273835a29dffd95851", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "60b55b92012f87bc491cde48a152be331da6dcfd", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "df36ae6823beeab209c1afd81d18a486b522f8c9", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "infracost/infracost", "sha": "5d40cb23d2be32aa2a00e3f50de5c5f62c39c364", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "84c1821f12f5e6103c84ce3c5133aba4aa5772e5", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "d563783cd20da195093f23aa7214f1fd2405f7cc", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "puppeteer/puppeteer", "sha": "f42428a3f9ecc36c8cd827fc7c0c006e8d046a69", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "449730020af54b2c37edcd145645bddda87e5da6", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "c397894755892daab740690bd7432c0fb8f0dfe8", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "2485b5b98092f12c54517d8ab2c918cd584d0224", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "algolia/instantsearch", "sha": "d24870bc13fd29488d15d2783da78cb84778d0df", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "influxdata/telegraf", "sha": "4ae8c60178bd414b8d3526ab34c51ecdeb1eb6ee", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "dd5a6a62102ea0a2d6782ea23ecad5e80a553c88", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "JordanKnott/taskcafe", "sha": "800dd2014c1c535a6e61175b7174e30f750a8fe7", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "tobymao/sqlglot", "sha": "7bce2f6abe79dfd8064c625294d94364042207c5", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "wandb/wandb", "sha": "4dd0d12d20aa99a9cad2c824258e4111d525e6b5", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Flagsmith/flagsmith", "sha": "975c7b0d6438cd973ccd62b590436e4c2568b9d4", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "c2d6c386d2725b41b6d8342765c9d4be72ab3f18", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "274dadf2507ac4daeea59c53a0f408343d582d8e", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-app", "sha": "1e60076cd52de601b6e403bc783389d17faa46ef", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "0e6576a92d5c0ebf5100e5f71505fa470adb2bf1", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gotd/td", "sha": "72a78ebf579cce54d7a424c2fab2cc60cb9860ab", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "b8f2641d120c96c4e63147ccb13da80d238cd15d", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "orval-labs/orval", "sha": "60810aac0f5542bec330dae81670320f65ab3b21", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "vanus-labs/vanus", "sha": "92f72e084134f3027a802e2931f77101725a12d8", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "tobymao/sqlglot", "sha": "5d5795d5ac7812790e95befa54b5c2bc10757934", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "d80f266a3094aff66809f02a9f66e9e245a36545", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "fa49811377103db9241f43537e508da62eb19076", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "LuanRT/YouTube.js", "sha": "9007b652375e1ca3c3844bdf091fe3670f98dc2c", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "f93a5459ed27800cf7ea33a06a7a1e74b2d32c33", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "7678fa2c2b53b6743457ebd7a117a84b0a5ec007", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "wandb/wandb", "sha": "0e42ebc1e3a2f66c2748d195b225b353bbdaf391", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "tobymao/sqlglot", "sha": "79c5098b640ffa0628bb18e26c04b4dad31e5f25", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "ff1da5cca66e2bc93eac9f19715d20900b3948e8", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "naver/billboard.js", "sha": "b16605deb9e94c9fd6641e2e20c46d972cf4bbe0", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "bfb019accea887fa7c12945dc577c3f74ad2ec9a", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "bootstrap-vue/bootstrap-vue", "sha": "7765d7c17fc9546d036e0bb7504cd2abe3b64763", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "77d35fc8e6952bbe985329bf5b43b9b08a6258db", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "5dfcffa281b2af09a30fbac9241c48acbe219c8f", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "7adcc24bf6b0531fa4b0a5934b1753d6b5281b58", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "d79cd5898fee638809d35828997305ccfd6c0ade", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "e85caa3fffe7c773b7c6adebd11b850cbdfad486", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "a47e1249447501ac8b190aac3968cb736c432aa9", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "d10802ce9a27c43bbd3b176aa793db5bdcca3873", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "c754b206c21ee2d374203bc83f723123a476fe24", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gotd/td", "sha": "22aa778899984363e346c9e14c5eae7cf8a9765e", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "instadeepai/jumanji", "sha": "b8b2d97c07019104b42600fad1673d08a11ef023", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "gatsbyjs/gatsby", "sha": "eaab2dfa1a7e1c1e64ffb78487f3f6c324f892ce", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-node", "sha": "faf5e51ab8efdffb3f3f7fbcf61f44b879413969", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "crimx/ext-saladict", "sha": "0dfa8da898de144dde066b8bfc588615766c1888", "weak_label": "high_value", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "wandb/wandb", "sha": "7546904425ea8fb82d79d5daaa5b9b1a25494ad7", "weak_label": "high_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "naver/billboard.js", "sha": "220e27f87a4795e8c408d9dd3104f0b666b42e05", "weak_label": "noise", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "oxyno-zeta/s3-proxy", "sha": "4f4d2745de03246563f1ca4ac33a1ea5387570df", "weak_label": "noise", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "10d5a8f9ae783e92b2e700a491cc1e22af81865d", "weak_label": "noise", "final_label": "high_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "LuanRT/YouTube.js", "sha": "d7d6a4e01937c7820fa8720dc0c0c872ea2257d9", "weak_label": "noise", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "withfig/autocomplete", "sha": "20d2ff8d50cc9aed68d135c1c0ae8a920b0e05d6", "weak_label": "medium_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "danvergara/dblab", "sha": "6e5c8bee2b5172cab8b913dbc80421c21aa2f384", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "d98ca8aacc47bea74285cfcceef704a6ba7ead87", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "millsp/ts-toolbelt", "sha": "1c8ff5cf2feb3ce0b7d0fbfc43be8d20f5b73287", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "chakra-ui/panda", "sha": "df982ad2065fc0cc837142eac49c877f321ef3be", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Opentrons/opentrons", "sha": "b2278872760e79f21fc2d05c217b93df6eb74528", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "6a08830840fb7d9728f473e192e151af869c3710", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "puppeteer/puppeteer", "sha": "8f886a09988696c0ec6587176cae064a248a6319", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "5482e7ea15640b3dcd27669d6e905c0d2c447249", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "puppeteer/puppeteer", "sha": "0a41f8d01e85ff732fdd2e50468bc746d7bc6475", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "crypto-chassis/ccapi", "sha": "f0678587bc1fd5c1b4a84c766a07cb6282f9a711", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "instadeepai/Mava", "sha": "a8bc4bb108ee3ef23b2b7935a479bafa746b87ee", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "f253442ddd32db7c33fca1e0f95603d65d7871dc", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "93e7cf8b28ed9dae4990f899bbd8f8c41b835571", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "bytedance/fedlearner", "sha": "fc1274bb1c8478aefa548889f905bafd5ebdd9ea", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "payloadcms/payload", "sha": "b1469eae096afe815e661de54f607c489b1f1e0f", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "LuanRT/YouTube.js", "sha": "3e2b93284487d7eeb930c77cb6ab92457173a15f", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "kumahq/kuma", "sha": "abbaddbd48239e475d7bcbdb111d9da951b2979d", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "danvergara/dblab", "sha": "33228bc5291e9256e61b1eaf624b10ce0183a623", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "shadcn-ui/ui", "sha": "3c22784a983f5b7c2321573881cf02eb7a1f314c", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "ddev/ddev", "sha": "b525efb91cff263b1f8f213c181b003b703978df", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "instadeepai/Mava", "sha": "eef1b30171c5f3462b477f89a2107fe30c3e7456", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "datahub-project/datahub", "sha": "6302d32685b7b87e14caf42bf324e239dbbb37ef", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "ddev/ddev", "sha": "af774eb9ef546cd77951c79e21225f05598f40e5", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "goreleaser/goreleaser", "sha": "7e638371fdf2c92a406d33541a9455da564d1962", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "a2b48e1793e4a95e10a47a3650278e24e20e974a", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "b4260afd158c9f1c6faae8ee95019e1e7c385e5f", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "censys/censys-python", "sha": "e5d9f4094efee381e8742c4bc3e6133759dd5604", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "aws/aws-cdk", "sha": "5fa9c106e1afe14eaac6407b3c11b57a03953b33", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "jina-ai/serve", "sha": "0a3c3cf9b105e21d13424ee5e9c95c4619caa05e", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "anmitsu/goful", "sha": "e77aecaefac1d8cf0833bf00b490bfbf742cc989", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "datahub-project/datahub", "sha": "e75900b9a9e1a4febe584765e59caee3ecb1af14", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-node", "sha": "8a3fd58f56f9c83aea575877fd1de78a451b0b29", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "rematch/rematch", "sha": "ec97f994f2deff75d6a8dc866878a62c8ecf2f1e", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "thi-ng/umbrella", "sha": "b20a3ddc09d313e367be7324f90bbd70e9db65b3", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "444067d24f2aee15eece92a0b1a4888b9fb9e419", "weak_label": "low_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "e39065d2c2798f442cce14021cc28dc276d1c8e7", "weak_label": "medium_value", "final_label": "noise", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "LuanRT/YouTube.js", "sha": "06887e99fb1c2546e74b5026cb1ae1ce0be2e3e9", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "smallrye/smallrye-mutiny", "sha": "deed4211eef9889a940202f1e1730591a3443279", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "crimx/ext-saladict", "sha": "df855b6d0989e8333d3764b3c59b7180ee97c6bb", "weak_label": "medium_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "cosmos/cosmos-sdk", "sha": "9f46665d937830b764183077dabfb54c7b83eff7", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "goreleaser/goreleaser", "sha": "4ada24b6a88fbd723b421d5158523c2c7681b8c0", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "celestiaorg/celestia-app", "sha": "a228c3ed3d9ef1c398cb83a47ad48f585d8067eb", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "danvergara/dblab", "sha": "944f15dde18d9fbf4ec3be037fa5585513c7e673", "weak_label": "medium_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "camunda/camunda-modeler", "sha": "5a810f38bce06b91cc569588f58a196490fed8df", "weak_label": "low_value", "final_label": "medium_value", "reviewer": "aarav-modi", "notes": ""}
+{"repo": "Agoric/agoric-sdk", "sha": "961c7f85b91d20b7c136583131fa35f1f89bc333", "weak_label": "low_value", "final_label": "low_value", "reviewer": "aarav-modi", "notes": ""}
