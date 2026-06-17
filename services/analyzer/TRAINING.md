@@ -59,12 +59,20 @@ cd services/analyzer
 .venv\Scripts\python scripts/collect_from_git_repos.py --max-repos 3 --commits-per-repo 75
 ```
 
+If you want a larger prebuilt open-source corpus, import CommitSuite:
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/import_commitsuite.py --limit 2000
+```
+
 ## Current status
 
 - `datasets/seed_open_source_commits.jsonl` is a tiny seed dataset for pipeline validation.
 - `datasets/open_source_repo_manifest.json` lists candidate public repositories to expand next.
 - `scripts/collect_open_source_data.py` fetches public commit data from GitHub and exports weak labels.
 - `scripts/collect_from_git_repos.py` clones public repos and builds a larger local training dataset from git history.
+- `scripts/import_commitsuite.py` converts CommitSuite records into GitGrade-compatible JSONL.
 - `scripts/build_review_queue.py` samples commits into a manual review queue.
 - `scripts/review_labels.py` runs a terminal labeling workflow and saves review overrides.
 - `scripts/train_model.py` trains the first baseline classifier.
