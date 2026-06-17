@@ -46,6 +46,15 @@ cd services/analyzer
 .venv\Scripts\python scripts/review_labels.py --reviewer your-name
 ```
 
+### User-specific data collection
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/collect_from_github_user.py --username aaravhmodi
+.venv\Scripts\python scripts/collect_from_local_repos.py --repos C:\path\to\repo1 C:\path\to\repo2
+.venv\Scripts\python scripts/merge_datasets.py --inputs ..\..\datasets\commitsuite_gitgrade.jsonl ..\..\datasets\github_user_commits.jsonl --output ..\..\datasets\training_combined.jsonl
+```
+
 ### Initial product direction
 
 1. Build the rule-based analyzer first.

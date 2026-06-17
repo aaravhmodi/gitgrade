@@ -40,3 +40,10 @@ class GithubClient:
     def fetch_commit_detail(self, source: GithubCommitSource, sha: str) -> dict[str, Any]:
         url = f"https://api.github.com/repos/{source.owner}/{source.repo}/commits/{sha}"
         return self._get_json(url)
+
+    def fetch_user_profile(self, username: str) -> dict[str, Any]:
+        return self._get_json(f"https://api.github.com/users/{urllib.parse.quote(username)}")
+
+    def fetch_user_repositories(self, username: str, per_page: int = 100) -> list[dict[str, Any]]:
+        query = urllib.parse.urlencode({"per_page": min(per_page, 100), "sort": "updated"})
+        return self._get_json(f"https://api.github.com/users/{urllib.parse.quote(username)}/repos?{query}")

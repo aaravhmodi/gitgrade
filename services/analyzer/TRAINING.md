@@ -66,6 +66,20 @@ cd services/analyzer
 .venv\Scripts\python scripts/import_commitsuite.py --limit 2000
 ```
 
+To add your own GitHub public history:
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/collect_from_github_user.py --username aaravhmodi
+```
+
+To add local repos on disk:
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/collect_from_local_repos.py --repos C:\path\to\repo1 C:\path\to\repo2
+```
+
 ## Current status
 
 - `datasets/seed_open_source_commits.jsonl` is a tiny seed dataset for pipeline validation.
@@ -73,6 +87,9 @@ cd services/analyzer
 - `scripts/collect_open_source_data.py` fetches public commit data from GitHub and exports weak labels.
 - `scripts/collect_from_git_repos.py` clones public repos and builds a larger local training dataset from git history.
 - `scripts/import_commitsuite.py` converts CommitSuite records into GitGrade-compatible JSONL.
+- `scripts/collect_from_github_user.py` pulls likely user-authored commits from public GitHub-owned repos.
+- `scripts/collect_from_local_repos.py` collects commits from specified local repositories.
+- `scripts/merge_datasets.py` combines multiple dataset files into one training set.
 - `scripts/build_review_queue.py` samples commits into a manual review queue.
 - `scripts/review_labels.py` runs a terminal labeling workflow and saves review overrides.
 - `scripts/train_model.py` trains the first baseline classifier.
