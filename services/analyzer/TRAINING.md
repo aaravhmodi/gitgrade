@@ -91,7 +91,9 @@ cd services/analyzer
 - `scripts/collect_from_local_repos.py` collects commits from specified local repositories.
 - `scripts/merge_datasets.py` combines multiple dataset files into one training set.
 - `scripts/build_review_queue.py` samples commits into a manual review queue.
+- `scripts/build_focus_review_queue.py` creates a harder queue concentrated on noise and boundary cases.
 - `scripts/review_labels.py` runs a terminal labeling workflow and saves review overrides.
+- `scripts/error_report.py` shows which manually reviewed commits the model still gets wrong.
 - `scripts/train_model.py` trains the first baseline classifier.
 
 ## Next step

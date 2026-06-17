@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 
 from .dataset import LabeledCommit
 from .feature_engineering import MODEL_FEATURE_NAMES, matrix_from_features
+from .models import CommitFeatures
 
 LABEL_ORDER = ["noise", "low_value", "medium_value", "high_value"]
 
@@ -60,3 +61,34 @@ def train_classifier(records: list[LabeledCommit]) -> TrainingArtifacts:
         metrics_text=metrics_text,
         sample_count=len(records),
     )
+
+
+def fit_full_classifier(records: list[LabeledCommit]) -> TrainingArtifacts:
+    features = [record.features for record in records]
+    labels = [record.label for record in records]
+    matrix = matrix_from_features(features)
+
+    if len(set(labels)) < 2:
+        raise ValueError("Training data must contain at least two labels.")
+
+    model = RandomForestClassifier(
+        n_estimators=200,
+        random_state=42,
+        class_weight="balanced",
+        max_depth=8,
+    )
+    model.fit(matrix, labels)
+    present_labels = [label for label in LABEL_ORDER if label in set(labels)]
+
+    return TrainingArtifacts(
+        model=model,
+        labels=present_labels,
+        feature_names=list(MODEL_FEATURE_NAMES),
+        metrics_text="trained_on_full_dataset",
+        sample_count=len(records),
+    )
+
+
+def predict_labels(artifacts: TrainingArtifacts, features: list[CommitFeatures]) -> list[str]:
+    matrix = matrix_from_features(features)
+    return list(artifacts.model.predict(matrix))

@@ -55,6 +55,14 @@ cd services/analyzer
 .venv\Scripts\python scripts/merge_datasets.py --inputs ..\..\datasets\commitsuite_gitgrade.jsonl ..\..\datasets\github_user_commits.jsonl --output ..\..\datasets\training_combined.jsonl
 ```
 
+### Error analysis
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/error_report.py --dataset ..\..\datasets\training_combined_with_local.jsonl
+.venv\Scripts\python scripts/build_focus_review_queue.py --dataset ..\..\datasets\user_history_combined.jsonl --target-total 100
+```
+
 ### Initial product direction
 
 1. Build the rule-based analyzer first.
