@@ -91,7 +91,7 @@ input {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(320px, 0.88fr) minmax(420px, 0.98fr);
+  grid-template-columns: minmax(420px, 1fr) minmax(420px, 0.96fr);
   gap: 14px;
   align-items: start;
 }
@@ -101,20 +101,20 @@ input {
 }
 
 .hero h1 {
-  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  font-size: clamp(2.35rem, 4vw, 3.9rem);
   font-weight: 580;
   letter-spacing: -0.04em;
   line-height: 1;
   color: var(--text);
-  max-width: 11ch;
-  margin-bottom: 12px;
+  max-width: 12ch;
+  margin-bottom: 14px;
 }
 
 .hero-sub {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-muted);
-  max-width: 50ch;
-  line-height: 1.65;
+  max-width: 56ch;
+  line-height: 1.7;
 }
 
 .hero-points {
@@ -122,11 +122,11 @@ input {
   grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 22px;
-  max-width: 220px;
+  max-width: 280px;
 }
 
 .hero-point {
-  padding: 14px;
+  padding: 16px 18px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent), var(--surface);
@@ -134,14 +134,14 @@ input {
 
 .hero-point-value {
   display: block;
-  font-size: 1.25rem;
+  font-size: 1.65rem;
   font-weight: 600;
   letter-spacing: -0.03em;
 }
 
 .hero-point-label {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: 6px;
 }
