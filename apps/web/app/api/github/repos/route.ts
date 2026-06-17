@@ -1,68 +1,57 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-const GITHUB_API_URL = "https://api.github.com";
-
-type GithubRepo = {
-  id: number;
-  full_name: string;
-  private: boolean;
-  fork: boolean;
-  updated_at: string;
-  html_url: string;
-};
+import {
+  clearGithubSession,
+  getAuthorizedInstallations,
+  getGithubAppConfig,
+  getGithubSession,
+  getInstallationRepositories,
+} from "@/lib/github-app";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
-  const payload = (await request.json().catch(() => null)) as { token?: string } | null;
-  const token = payload?.token?.trim();
-
-  if (!token) {
-    return NextResponse.json({ error: "GitHub token is required." }, { status: 400 });
+export async function GET() {
+  if (!getGithubAppConfig()) {
+    return NextResponse.json({ error: "GitHub App is not configured." }, { status: 500 });
   }
 
-  const headers = {
-    Accept: "application/vnd.github+json",
-    Authorization: `Bearer ${token}`,
-    "User-Agent": "gitgrade-web",
-  };
+  const session = await getGithubSession();
+  if (!session) {
+    return NextResponse.json({ error: "Not connected to GitHub." }, { status: 401 });
+  }
 
-  const [userResponse, reposResponse] = await Promise.all([
-    fetch(`${GITHUB_API_URL}/user`, { headers, cache: "no-store" }),
-    fetch(
-      `${GITHUB_API_URL}/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member`,
-      { headers, cache: "no-store" }
-    ),
-  ]);
+  try {
+    const installationsResponse = await getAuthorizedInstallations(session.accessToken);
+    const reposByInstallation = await Promise.all(
+      installationsResponse.installations.map(async (installation) => {
+        const reposResponse = await getInstallationRepositories(session.accessToken, installation.id);
+        return reposResponse.repositories.map((repo) => ({
+          id: repo.id,
+          full_name: repo.full_name,
+          private: repo.private,
+          updated_at: repo.updated_at,
+          html_url: repo.html_url,
+          installation_id: installation.id,
+          owner: installation.account.login,
+          target_type: installation.target_type,
+        }));
+      })
+    );
 
-  if (!userResponse.ok) {
+    return NextResponse.json({
+      username: session.username,
+      repos: reposByInstallation.flat().sort((a, b) => b.updated_at.localeCompare(a.updated_at)),
+    });
+  } catch (caughtError) {
+    await clearGithubSession();
     return NextResponse.json(
-      { error: "GitHub authentication failed. Check that the token is valid and has repo access." },
-      { status: userResponse.status }
+      { error: caughtError instanceof Error ? caughtError.message : "Unable to load repositories from GitHub." },
+      { status: 401 }
     );
   }
+}
 
-  if (!reposResponse.ok) {
-    return NextResponse.json(
-      { error: "Unable to load repositories from GitHub." },
-      { status: reposResponse.status }
-    );
-  }
-
-  const user = (await userResponse.json()) as { login: string; name?: string | null };
-  const repos = ((await reposResponse.json()) as GithubRepo[])
-    .filter((repo) => !repo.fork)
-    .map((repo) => ({
-      id: repo.id,
-      full_name: repo.full_name,
-      private: repo.private,
-      updated_at: repo.updated_at,
-      html_url: repo.html_url,
-    }));
-
-  return NextResponse.json({
-    username: user.login,
-    display_name: user.name ?? user.login,
-    repos,
-  });
+export async function DELETE() {
+  await clearGithubSession();
+  return NextResponse.json({ ok: true });
 }

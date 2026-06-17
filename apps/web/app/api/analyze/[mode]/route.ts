@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getGithubSession } from "@/lib/github-app";
+
 const ANALYZER_URL = process.env.ANALYZER_URL ?? "http://127.0.0.1:8010";
 
 type RouteContext = {
@@ -17,6 +19,16 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   const payload = await request.json();
+  if (mode === "user") {
+    const session = await getGithubSession();
+    if (!session) {
+      return NextResponse.json({ error: "Connect GitHub before running user analysis." }, { status: 401 });
+    }
+
+    payload.username = session.username;
+    payload.github_token = session.accessToken;
+  }
+
   const response = await fetch(`${ANALYZER_URL}/analyze/${mode}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
