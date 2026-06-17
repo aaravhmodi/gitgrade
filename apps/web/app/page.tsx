@@ -1,12 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+
 import type { GitGradeReport } from "@/lib/report-types";
 
-const initialMode = "user";
+function pct(value: number) {
+  return `${Math.round(value * 100)}%`;
+}
 
 export default function HomePage() {
-  const [mode, setMode] = useState<"user" | "repo">(initialMode);
+  const [mode, setMode] = useState<"user" | "repo">("user");
   const [subject, setSubject] = useState("aaravhmodi");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -31,13 +34,12 @@ export default function HomePage() {
         )
       });
 
+      const payload = (await response.json().catch(() => null)) as GitGradeReport | { error?: string } | null;
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(payload?.error ?? "Analysis failed.");
+        throw new Error((payload as { error?: string } | null)?.error ?? "Analysis failed.");
       }
 
-      const payload = (await response.json()) as GitGradeReport;
-      setReport(payload);
+      setReport(payload as GitGradeReport);
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Analysis failed.");
     } finally {
@@ -65,7 +67,7 @@ export default function HomePage() {
         throw new Error(payload.error ?? "Save failed.");
       }
 
-      setSaveMessage(`Saved report ${payload.id}`);
+      setSaveMessage(`Saved ${payload.id}`);
     } catch (caughtError) {
       setSaveMessage(caughtError instanceof Error ? caughtError.message : "Save failed.");
     } finally {
@@ -74,201 +76,152 @@ export default function HomePage() {
   }
 
   const summary = report?.summary;
-  const topCommits = report?.top_commits ?? [];
-  const commitBreakdown = report ? Object.entries(report.summary.commit_label_breakdown) : [];
-  const fileBreakdown = report ? Object.entries(report.summary.file_type_breakdown) : [];
+  const topCommit = report?.top_commits[0];
+  const breakdown = summary ? Object.entries(summary.commit_label_breakdown) : [];
+  const fileBreakdown = summary ? Object.entries(summary.file_type_breakdown) : [];
 
   return (
-    <main className="page-shell">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">GitHub Contribution Intelligence</p>
-          <h1>Grade commit history by engineering signal.</h1>
-          <p>
-            GitGrade combines commit-level ML with weighted file-impact rules so
-            source-heavy, coherent engineering work scores above generated churn,
-            data dumps, and tiny low-signal edits.
-          </p>
+    <main className="minimal-shell">
+      <section className="hero-block">
+        <div className="hero-copy">
+          <p className="micro">GitGrade</p>
+          <h1>Commit history, graded by engineering signal.</h1>
         </div>
 
-        <aside className="panel hero-card">
-          <h2>Analyze A Repo Or User</h2>
-          <p>
-            Run the local analyzer on a GitHub username or repository and turn the
-            commit stream into an explainable recruiter-style report.
-          </p>
-
-          <form className="analyze-form" onSubmit={handleSubmit}>
-            <div className="toggle-row">
-              <button
-                className={mode === "user" ? "toggle active" : "toggle"}
-                onClick={() => {
-                  setMode("user");
-                  setSubject("aaravhmodi");
-                }}
-                type="button"
-              >
-                User
-              </button>
-              <button
-                className={mode === "repo" ? "toggle active" : "toggle"}
-                onClick={() => {
-                  setMode("repo");
-                  setSubject("vercel/next.js");
-                }}
-                type="button"
-              >
-                Repo
-              </button>
-            </div>
-
-            <label className="input-label" htmlFor="subject">
-              {mode === "user" ? "GitHub username" : "owner/repo"}
-            </label>
-            <input
-              id="subject"
-              className="text-input"
-              onChange={(event) => setSubject(event.target.value)}
-              placeholder={mode === "user" ? "aaravhmodi" : "vercel/next.js"}
-              value={subject}
-            />
-
-            <button className="submit-button" disabled={loading || !subject.trim()} type="submit">
-              {loading ? "Analyzing..." : "Run GitGrade"}
-            </button>
+        <form className="hero-form" onSubmit={handleSubmit}>
+          <div className="switcher">
             <button
-              className="secondary-button"
-              disabled={!report || saving}
-              onClick={handleSaveReport}
+              className={mode === "user" ? "switch active" : "switch"}
+              onClick={() => {
+                setMode("user");
+                setSubject("aaravhmodi");
+              }}
               type="button"
             >
-              {saving ? "Saving..." : "Save To Supabase"}
+              User
             </button>
-          </form>
+            <button
+              className={mode === "repo" ? "switch active" : "switch"}
+              onClick={() => {
+                setMode("repo");
+                setSubject("vercel/next.js");
+              }}
+              type="button"
+            >
+              Repo
+            </button>
+          </div>
 
-          {error ? <p className="error-text">{error}</p> : null}
-          {saveMessage ? <p className="save-text">{saveMessage}</p> : null}
-        </aside>
+          <input
+            className="hero-input"
+            onChange={(event) => setSubject(event.target.value)}
+            placeholder={mode === "user" ? "aaravhmodi" : "owner/repo"}
+            value={subject}
+          />
+
+          <div className="action-row">
+            <button className="primary-action" disabled={loading || !subject.trim()} type="submit">
+              {loading ? "Running..." : "Analyze"}
+            </button>
+            <button className="ghost-action" disabled={!report || saving} onClick={handleSaveReport} type="button">
+              {saving ? "Saving..." : "Save"}
+            </button>
+          </div>
+
+          {error ? <p className="status error">{error}</p> : null}
+          {saveMessage ? <p className="status ok">{saveMessage}</p> : null}
+        </form>
       </section>
 
-      <section className="grid metrics">
-        <article className="panel metric-card">
-          <span>Overall Grade</span>
+      <section className="score-strip">
+        <article className="score-card lead">
+          <span>Grade</span>
           <strong>{summary?.overall_grade ?? "?"}</strong>
-          <p>Weighted outcome from model predictions plus deterministic impact scoring.</p>
         </article>
-        <article className="panel metric-card">
-          <span>Meaningful Commit Ratio</span>
-          <strong>{summary ? `${Math.round(summary.meaningful_commit_ratio * 100)}%` : "?"}</strong>
-          <p>Share of commits predicted as medium-value or high-value engineering work.</p>
+        <article className="score-card">
+          <span>Meaningful</span>
+          <strong>{summary ? pct(summary.meaningful_commit_ratio) : "?"}</strong>
         </article>
-        <article className="panel metric-card">
-          <span>Impact Per Commit</span>
-          <strong>{summary ? summary.impact_per_commit.toFixed(1) : "?"}</strong>
-          <p>Weighted signal density per commit, independent of raw commit volume.</p>
+        <article className="score-card">
+          <span>Impact</span>
+          <strong>{summary ? summary.impact_per_commit.toFixed(0) : "?"}</strong>
         </article>
-        <article className="panel metric-card">
-          <span>Padding Risk</span>
+        <article className="score-card">
+          <span>Risk</span>
           <strong>{summary?.padding_risk ?? "?"}</strong>
-          <p>Derived from low-signal concentration, tiny changes, and code-vs-churn balance.</p>
         </article>
       </section>
 
-      <section className="grid sections">
-        <article className="panel section-block">
-          <div className="section-header">
-            <h2>Commit Breakdown</h2>
-            <p>
-              This shows what the model believes the recent commit stream looks like,
-              not just how often someone committed.
-            </p>
-          </div>
-
-          <div className="report-list">
-            {commitBreakdown.length ? (
-              commitBreakdown.map(([label, count]) => (
-                <div className="report-row" key={label}>
-                  <strong>{label.replaceAll("_", " ")}</strong>
-                  <em>{count}</em>
-                </div>
-              ))
-            ) : (
-              <p className="empty-state">Run an analysis to see commit-class predictions.</p>
-            )}
-          </div>
-        </article>
-
-        <article className="panel report-card">
-          <span>Top Commits</span>
-          <p>Highest-signal commits after combining model label, confidence, and file-impact weighting.</p>
-          <ul>
-            {topCommits.length ? (
-              topCommits.map((commit) => (
-                <li key={commit.sha}>
-                  <strong>{commit.message}</strong> ({commit.predicted_label}, {commit.score}/100)
-                </li>
-              ))
-            ) : (
-              <li>Run an analysis to surface the strongest commits.</li>
-            )}
-          </ul>
-        </article>
-      </section>
-
-      <section className="grid sections">
-        <article className="panel section-block">
-          <div className="section-header">
-            <h2>File Impact</h2>
-            <p>
-              Source code and core project paths count more than data files, assets,
-              generated output, and trivial maintenance churn.
-            </p>
-          </div>
-
-          <div className="report-list">
-            {fileBreakdown.length ? (
-              fileBreakdown.map(([label, count]) => (
-                <div className="report-row" key={label}>
-                  <strong>{label.replaceAll("_", " ")}</strong>
-                  <em>{count}</em>
-                </div>
-              ))
-            ) : (
-              <p className="empty-state">File-impact breakdown appears after analysis.</p>
-            )}
-          </div>
-        </article>
-
-        <article className="panel report-card">
-          <span>Weak Signal Patterns</span>
-          <p>These are the patterns the product layer calls out in the final report.</p>
-          <ul>
-            {summary?.weak_signal_patterns?.length ? (
-              summary.weak_signal_patterns.map((item) => <li key={item}>{item}</li>)
-            ) : (
-              <li>No report yet.</li>
-            )}
-          </ul>
-
-          {summary ? (
-            <>
-              <span style={{ marginTop: 18 }}>Signal Read</span>
-              <p>
-                Strongest signal: <strong>{summary.strongest_signal.replaceAll("_", " ")}</strong>
-              </p>
-              <p>
-                Weakest signal: <strong>{summary.weakest_signal.replaceAll("_", " ")}</strong>
-              </p>
-            </>
+      <section className="one-page-grid">
+        <article className="surface statement">
+          <span className="surface-label">Read</span>
+          <h2>{report ? report.subject_name : "Run an analysis"}</h2>
+          <p>
+            {summary
+              ? `${summary.strongest_signal.replaceAll("_", " ")} leads. ${summary.weakest_signal.replaceAll("_", " ")} trails. ${summary.total_commits} commits analyzed.`
+              : "One clean report for a repo or a GitHub user."}
+          </p>
+          {summary?.weak_signal_patterns?.length ? (
+            <div className="pill-row">
+              {summary.weak_signal_patterns.slice(0, 3).map((item) => (
+                <span className="pill" key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
           ) : null}
         </article>
-      </section>
 
-      <p className="footer-note">
-        GitGrade evaluates public commit history quality, not developer worth. It
-        discounts data-only churn and generated output, and favors coherent source
-        code changes over raw commit volume.
-      </p>
+        <article className="surface">
+          <span className="surface-label">Breakdown</span>
+          <div className="stack-list">
+            {breakdown.length ? (
+              breakdown.map(([label, count]) => (
+                <div className="stack-row" key={label}>
+                  <span>{label.replaceAll("_", " ")}</span>
+                  <strong>{count}</strong>
+                </div>
+              ))
+            ) : (
+              <p className="muted">No report yet.</p>
+            )}
+          </div>
+        </article>
+
+        <article className="surface">
+          <span className="surface-label">File Weight</span>
+          <div className="stack-list">
+            {fileBreakdown.length ? (
+              fileBreakdown
+                .filter(([, count]) => count > 0)
+                .slice(0, 6)
+                .map(([label, count]) => (
+                  <div className="stack-row" key={label}>
+                    <span>{label.replaceAll("_", " ")}</span>
+                    <strong>{count}</strong>
+                  </div>
+                ))
+            ) : (
+              <p className="muted">Source-heavy commits score above data and generated churn.</p>
+            )}
+          </div>
+        </article>
+
+        <article className="surface wide">
+          <span className="surface-label">Top Commit</span>
+          {topCommit ? (
+            <>
+              <h3>{topCommit.message}</h3>
+              <div className="topline">
+                <span>{topCommit.predicted_label.replaceAll("_", " ")}</span>
+                <strong>{topCommit.score}/100</strong>
+              </div>
+            </>
+          ) : (
+            <p className="muted">The strongest commit appears here after analysis.</p>
+          )}
+        </article>
+      </section>
     </main>
   );
 }
