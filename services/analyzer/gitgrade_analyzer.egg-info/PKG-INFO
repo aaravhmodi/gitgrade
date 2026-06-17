@@ -1,0 +1,29 @@
+Metadata-Version: 2.4
+Name: gitgrade-analyzer
+Version: 0.1.0
+Summary: Rule-based commit quality analyzer for GitGrade.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi<1.0,>=0.115
+Requires-Dist: pydantic<3.0,>=2.8
+Requires-Dist: scikit-learn<2.0,>=1.5
+Requires-Dist: uvicorn<1.0,>=0.30
+Provides-Extra: dev
+Requires-Dist: pytest<9.0,>=8.2; extra == "dev"
+
+# gitgrade-analyzer
+
+Initial analyzer service for GitGrade.
+
+## Current scope
+
+- stable report models
+- rule-based scoring stub
+- health and sample analysis API
+
+## Run
+
+```bash
+pip install -e .
+uvicorn gitgrade_analyzer.main:app --reload
+```

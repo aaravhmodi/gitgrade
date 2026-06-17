@@ -1,0 +1,72 @@
+# Training GitGrade On Open-Source Commit Data
+
+## Goal
+
+Train a baseline classifier that predicts commit quality labels from public commit history features.
+
+## Dataset format
+
+Use JSONL with one labeled commit per line:
+
+```json
+{
+  "repo": "owner/repo",
+  "sha": "abc123",
+  "message": "Fix token refresh race condition",
+  "files_changed": 4,
+  "lines_added": 42,
+  "lines_deleted": 18,
+  "source_files_changed": 3,
+  "test_files_changed": 1,
+  "docs_files_changed": 0,
+  "generated_files_changed": 0,
+  "config_files_changed": 0,
+  "vague_message": false,
+  "issue_reference": true,
+  "tiny_diff": false,
+  "whitespace_only": false,
+  "repeated_message": false,
+  "label": "high_value"
+}
+```
+
+## Current labels
+
+- `high_value`
+- `medium_value`
+- `low_value`
+- `noise`
+
+## Recommended collection workflow
+
+1. Export commits from selected public repositories.
+2. Compute structural features from diffs.
+3. Weak-label obvious examples with rules.
+4. Manually review uncertain commits and a random validation slice.
+5. Retrain and compare the model against the rule baseline.
+
+## Collection command
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/collect_open_source_data.py --per-repo 25
+```
+
+If GitHub API rate limits are too tight, use local git history instead:
+
+```bash
+cd services/analyzer
+.venv\Scripts\python scripts/collect_from_git_repos.py --max-repos 3 --commits-per-repo 75
+```
+
+## Current status
+
+- `datasets/seed_open_source_commits.jsonl` is a tiny seed dataset for pipeline validation.
+- `datasets/open_source_repo_manifest.json` lists candidate public repositories to expand next.
+- `scripts/collect_open_source_data.py` fetches public commit data from GitHub and exports weak labels.
+- `scripts/collect_from_git_repos.py` clones public repos and builds a larger local training dataset from git history.
+- `scripts/train_model.py` trains the first baseline classifier.
+
+## Next step
+
+Implement the GitHub ingestion pipeline so the seed dataset can be replaced with real exported open-source commits at scale.

@@ -1,0 +1,44 @@
+{
+  "subject": {
+    "type": "repository",
+    "name": "owner/repo"
+  },
+  "summary": {
+    "overall_grade": "B+",
+    "average_commit_score": 77.3,
+    "meaningful_commit_ratio": 0.58,
+    "impact_per_commit": 71.4,
+    "commit_inflation_ratio": 1.72,
+    "padding_risk": "Low"
+  },
+  "commit_breakdown": {
+    "feature": 12,
+    "bug_fix": 7,
+    "refactor": 6,
+    "test": 4,
+    "docs": 3,
+    "config_build": 2,
+    "style_formatting": 2,
+    "generated_vendor": 1,
+    "noise_unclear": 1
+  },
+  "top_commits": [
+    {
+      "sha": "abc1234",
+      "message": "Add authentication flow and session tests",
+      "score": 94,
+      "label": "high_impact_feature"
+    },
+    {
+      "sha": "def5678",
+      "message": "Fix token refresh race condition",
+      "score": 91,
+      "label": "targeted_bug_fix"
+    }
+  ],
+  "recommendations": [
+    "Keep linking bug-fix commits with tests.",
+    "Separate formatting-only changes from logic changes.",
+    "Preserve clear intent in commit messages."
+  ]
+}

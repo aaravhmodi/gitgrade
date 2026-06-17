@@ -1,0 +1,12 @@
+[
+  "vercel/next.js",
+  "fastapi/fastapi",
+  "microsoft/vscode",
+  "facebook/react",
+  "django/django",
+  "numpy/numpy",
+  "vitejs/vite",
+  "kubernetes/kubernetes",
+  "psf/requests",
+  "home-assistant/core"
+]

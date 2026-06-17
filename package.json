@@ -1,0 +1,12 @@
+{
+  "name": "gitgrade",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:web": "npm --workspace @gitgrade/web run dev",
+    "build:web": "npm --workspace @gitgrade/web run build",
+    "lint:web": "npm --workspace @gitgrade/web run lint"
+  }
+}
