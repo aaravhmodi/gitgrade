@@ -1,42 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-type GitGradeReport = {
-  subject_type: string;
-  subject_name: string;
-  summary: {
-    overall_grade: string;
-    overall_score: number;
-    average_commit_score: number;
-    meaningful_commit_ratio: number;
-    impact_per_commit: number;
-    commit_inflation_ratio: number;
-    padding_risk: string;
-    total_commits: number;
-    meaningful_commits: number;
-    file_type_breakdown: Record<string, number>;
-    commit_label_breakdown: Record<string, number>;
-    weak_signal_patterns: string[];
-    strongest_signal: string;
-    weakest_signal: string;
-  };
-  commits: Array<{
-    sha: string;
-    message: string;
-    predicted_label: string;
-    score: number;
-    weighted_impact: number;
-    confidence: number;
-    rationale: string[];
-  }>;
-  top_commits: Array<{
-    sha: string;
-    message: string;
-    predicted_label: string;
-    score: number;
-  }>;
-};
+import type { GitGradeReport } from "@/lib/report-types";
 
 const initialMode = "user";
 
@@ -44,13 +9,16 @@ export default function HomePage() {
   const [mode, setMode] = useState<"user" | "repo">(initialMode);
   const [subject, setSubject] = useState("aaravhmodi");
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [report, setReport] = useState<GitGradeReport | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    setSaveMessage(null);
 
     try {
       const response = await fetch(`/api/analyze/${mode}`, {
@@ -74,6 +42,34 @@ export default function HomePage() {
       setError(caughtError instanceof Error ? caughtError.message : "Analysis failed.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSaveReport() {
+    if (!report) {
+      return;
+    }
+
+    setSaving(true);
+    setSaveMessage(null);
+
+    try {
+      const response = await fetch("/api/reports/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(report)
+      });
+
+      const payload = (await response.json()) as { error?: string; id?: string };
+      if (!response.ok) {
+        throw new Error(payload.error ?? "Save failed.");
+      }
+
+      setSaveMessage(`Saved report ${payload.id}`);
+    } catch (caughtError) {
+      setSaveMessage(caughtError instanceof Error ? caughtError.message : "Save failed.");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -140,9 +136,18 @@ export default function HomePage() {
             <button className="submit-button" disabled={loading || !subject.trim()} type="submit">
               {loading ? "Analyzing..." : "Run GitGrade"}
             </button>
+            <button
+              className="secondary-button"
+              disabled={!report || saving}
+              onClick={handleSaveReport}
+              type="button"
+            >
+              {saving ? "Saving..." : "Save To Supabase"}
+            </button>
           </form>
 
           {error ? <p className="error-text">{error}</p> : null}
+          {saveMessage ? <p className="save-text">{saveMessage}</p> : null}
         </aside>
       </section>
 
