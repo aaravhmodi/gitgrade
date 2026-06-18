@@ -71,14 +71,28 @@ function isValidRepoSlug(value: string) {
   return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value.trim());
 }
 
+function scoreInterpretation(score: number) {
+  if (score >= 75) return "strong signal";
+  if (score >= 50) return "mixed signal";
+  return "low signal";
+}
+
+function formatCommitDate(value: string | null | undefined) {
+  if (!value) return "date unavailable";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "date unavailable";
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 type ServiceStatus = {
   githubConfigured: boolean;
   githubConnected: boolean;
   githubUsername: string | null;
   githubMissing: string[];
-  analyzerOnline: boolean;
-  analyzerStatus: number | null;
-  analyzerUrl: string;
 };
 
 export default function HomePage() {
@@ -156,9 +170,6 @@ export default function HomePage() {
         githubConnected: false,
         githubUsername: null,
         githubMissing: [],
-        analyzerOnline: false,
-        analyzerStatus: null,
-        analyzerUrl: "",
       });
     }
   }
@@ -315,9 +326,6 @@ export default function HomePage() {
           {serviceStatus?.githubConnected
             ? `Connected${serviceStatus.githubUsername ? ` as ${serviceStatus.githubUsername}` : ""}`
             : "Not connected"}
-        </span>
-        <span className={serviceStatus?.analyzerOnline ? "service-chip ok" : "service-chip warn"}>
-          Analyzer {serviceStatus?.analyzerOnline ? "online" : "offline"}
         </span>
       </div>
 
@@ -580,9 +588,18 @@ export default function HomePage() {
               <h2>{report?.subject_name ?? "No analysis yet"}</h2>
               <p className="card-body">
                 {summary
-                  ? `${summary.total_commits} commits analyzed. ${titleize(summary.strongest_signal)} leads. ${titleize(summary.weakest_signal)} lags.`
+                  ? `${summary.total_commits} commits analyzed. ${scoreInterpretation(summary.overall_score)}. ${titleize(summary.strongest_signal)} leads. ${titleize(summary.weakest_signal)} lags.`
                   : "Connect GitHub and select repositories, or analyze a single repo directly."}
               </p>
+              {summary ? (
+                <div className="report-note">
+                  <strong>How the score reads:</strong>
+                  <span>
+                    {summary.overall_score.toFixed(1)} means {scoreInterpretation(summary.overall_score)}.
+                    Lower scores usually come from tiny diffs, docs-only work, generated files, or commits with little source-code impact.
+                  </span>
+                </div>
+              ) : null}
               {summary?.weak_signal_patterns?.length ? (
                 <ul className="tag-list">
                   {summary.weak_signal_patterns.slice(0, 4).map((item) => (
@@ -633,6 +650,7 @@ export default function HomePage() {
                       <div>
                         <p className="commit-msg">{commit.message}</p>
                         <span className="commit-tag">{titleize(commit.predicted_label)}</span>
+                        <span className="commit-meta">{formatCommitDate(commit.committed_at)}</span>
                       </div>
                       <span className="commit-score">{commit.score}</span>
                     </div>
@@ -679,7 +697,10 @@ export default function HomePage() {
                 {detailedCommits.map((commit) => (
                   <div className="detailed-commit" key={commit.sha}>
                     <div className="detailed-commit-top">
-                      <p className="commit-msg">{commit.message}</p>
+                      <div>
+                        <p className="commit-msg">{commit.message}</p>
+                        <p className="commit-meta">{formatCommitDate(commit.committed_at)}</p>
+                      </div>
                       <span className="commit-score">{commit.score}</span>
                     </div>
                     <p className="commit-tag">

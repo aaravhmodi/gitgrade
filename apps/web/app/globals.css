@@ -760,6 +760,24 @@ input {
   line-height: 1.55;
 }
 
+.report-note {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.report-note strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
 .tag-list {
   list-style: none;
   display: flex;
@@ -844,6 +862,13 @@ input {
 .commit-tag {
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.commit-meta {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
 }
 
 .commit-score {

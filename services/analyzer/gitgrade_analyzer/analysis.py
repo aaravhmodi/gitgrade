@@ -104,6 +104,7 @@ def _deterministic_impact(features: CommitFeatures) -> tuple[float, list[str]]:
 
     if features.tiny_diff:
         score -= 0.08
+        rationale.append("Tiny diffs usually indicate low engineering impact.")
 
     return max(0.0, min(1.0, score)), rationale
 
@@ -156,6 +157,7 @@ def predict_commit(features: CommitFeatures, artifacts: TrainingArtifacts) -> Co
     return CommitPrediction(
         sha=features.sha,
         message=features.message,
+        committed_at=features.committed_at,
         predicted_label=predicted_label,
         score=score,
         weighted_impact=round(weighted_impact, 3),

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class CommitFeatures(BaseModel):
     sha: str
     message: str
+    committed_at: str | None = None
     files_changed: int = Field(ge=0)
     lines_added: int = Field(ge=0)
     lines_deleted: int = Field(ge=0)
@@ -27,6 +28,7 @@ class CommitFeatures(BaseModel):
 class CommitPrediction(BaseModel):
     sha: str
     message: str
+    committed_at: str | None = None
     predicted_label: str
     score: int = Field(ge=0, le=100)
     weighted_impact: float = Field(ge=0.0, le=1.0)

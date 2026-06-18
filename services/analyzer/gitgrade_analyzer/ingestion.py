@@ -120,11 +120,16 @@ def commit_features_from_github_detail(detail: dict[str, Any]) -> CommitFeatures
             core_files_changed += 1
 
     message = detail["commit"]["message"].splitlines()[0]
+    committed_at = (
+        detail.get("commit", {}).get("author", {}).get("date")
+        or detail.get("commit", {}).get("committer", {}).get("date")
+    )
     total_change = detail.get("stats", {}).get("total", 0)
 
     return CommitFeatures(
         sha=detail["sha"],
         message=message,
+        committed_at=committed_at,
         files_changed=len(files),
         lines_added=detail.get("stats", {}).get("additions", 0),
         lines_deleted=detail.get("stats", {}).get("deletions", 0),

@@ -20,6 +20,7 @@ export type GitGradeReport = {
   commits: Array<{
     sha: string;
     message: string;
+    committed_at: string | null;
     predicted_label: string;
     score: number;
     weighted_impact: number;
@@ -29,6 +30,7 @@ export type GitGradeReport = {
   top_commits: Array<{
     sha: string;
     message: string;
+    committed_at: string | null;
     predicted_label: string;
     score: number;
   }>;
