@@ -246,6 +246,7 @@ input {
   border-radius: 14px;
   padding: 16px;
   backdrop-filter: blur(10px);
+  min-width: 0;
 }
 
 .form {
@@ -429,6 +430,7 @@ input {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: #111111;
+  min-width: 0;
 }
 
 .repo-option {
@@ -493,6 +495,7 @@ input {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border);
   border-radius: 14px;
+  min-width: 0;
 }
 
 .loading-title {
@@ -857,6 +860,7 @@ input {
   color: var(--text);
   line-height: 1.45;
   margin-bottom: 4px;
+  overflow-wrap: anywhere;
 }
 
 .commit-tag {
@@ -883,6 +887,15 @@ input {
   justify-content: space-between;
   gap: 12px;
   align-items: flex-start;
+}
+
+.hero-copy,
+.results-main,
+.results-side,
+.pipeline-section,
+.card,
+.side-card {
+  min-width: 0;
 }
 
 .rationale-list {
@@ -1059,6 +1072,7 @@ input {
 
   .hero-grid {
     padding: 12px;
+    gap: 16px;
   }
 
   .header {
@@ -1076,12 +1090,33 @@ input {
     font-size: clamp(1.75rem, 9vw, 2.3rem);
   }
 
+  .hero-sub {
+    font-size: 14px;
+  }
+
+  .hero-proof-item,
+  .hero-point,
+  .card,
+  .metric,
+  .hero-panel {
+    border-radius: 12px;
+  }
+
   .hero-points,
   .metrics,
   .loading-grid,
   .results-side,
   .pipeline-grid {
     grid-template-columns: 1fr;
+  }
+
+  .results-layout {
+    gap: 14px;
+  }
+
+  .results-main,
+  .results-side {
+    gap: 12px;
   }
 
   .hero-point {
@@ -1111,6 +1146,60 @@ input {
   .connected-header,
   .detailed-commit-top {
     flex-direction: column;
+  }
+
+  .input-row .btn-primary,
+  .input-row .btn-secondary,
+  .form-actions .btn-primary,
+  .form-actions .btn-secondary,
+  .repo-toolbar .btn-primary,
+  .repo-toolbar .btn-secondary {
+    width: 100%;
+  }
+
+  .mode-toggle {
+    width: 100%;
+  }
+
+  .mode-btn {
+    flex: 1;
+  }
+
+  .repo-toolbar .text-input {
+    width: 100%;
+  }
+
+  .repo-picker {
+    max-height: 260px;
+  }
+
+  .repo-option {
+    padding: 10px 11px;
+  }
+
+  .selection-strip {
+    gap: 8px;
+  }
+
+  .selection-pill {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .detailed-commit-top {
+    gap: 8px;
+  }
+
+  .commit-row {
+    grid-template-columns: 1fr;
+  }
+
+  .commit-score {
+    justify-self: start;
+  }
+
+  .signal-item {
+    align-items: flex-start;
   }
 
   .grid,
