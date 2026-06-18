@@ -18,6 +18,15 @@ function buildAuthRedirect(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  console.info("[github-callback]", {
+    host: request.nextUrl.host,
+    pathname: request.nextUrl.pathname,
+    has_code: request.nextUrl.searchParams.has("code"),
+    has_error: request.nextUrl.searchParams.has("error"),
+    installation_id: request.nextUrl.searchParams.get("installation_id"),
+    setup_action: request.nextUrl.searchParams.get("setup_action"),
+  });
+
   if (!getGithubAppConfig()) {
     return NextResponse.json(
       { error: `GitHub App is not configured. Missing: ${getMissingGithubAppConfigKeys().join(", ")}` },

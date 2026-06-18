@@ -12,6 +12,12 @@ import {
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
 export async function GET(request: NextRequest) {
+  console.info("[github-install-start]", {
+    host: request.nextUrl.host,
+    pathname: request.nextUrl.pathname,
+    callback_target: "/api/github/callback",
+  });
+
   if (!getGithubAppConfig()) {
     return NextResponse.json(
       { error: `GitHub App is not configured. Missing: ${getMissingGithubAppConfigKeys().join(", ")}` },
