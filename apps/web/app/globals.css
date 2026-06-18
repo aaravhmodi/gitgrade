@@ -1094,6 +1094,19 @@ input {
     font-size: 14px;
   }
 
+  .hero-proof {
+    display: none;
+  }
+
+  .hero-points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+
+  .hero-point:last-child {
+    display: none;
+  }
+
   .hero-proof-item,
   .hero-point,
   .card,
