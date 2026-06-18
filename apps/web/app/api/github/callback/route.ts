@@ -12,6 +12,10 @@ import {
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
+function buildAuthRedirect(request: NextRequest) {
+  return new URL("/auth", request.url);
+}
+
 export async function GET(request: NextRequest) {
   if (!getGithubAppConfig()) {
     return NextResponse.json(
@@ -27,14 +31,14 @@ export async function GET(request: NextRequest) {
   const setupAction = request.nextUrl.searchParams.get("setup_action");
 
   if (error) {
-    const redirect = new URL("/", request.url);
+    const redirect = buildAuthRedirect(request);
     redirect.searchParams.set("github_error", errorDescription ?? error);
     return NextResponse.redirect(redirect);
   }
 
   if (!code) {
     if (installationId || setupAction) {
-      const redirect = new URL("/", request.url);
+      const redirect = buildAuthRedirect(request);
       redirect.searchParams.set("github_connected", "1");
       return NextResponse.redirect(redirect);
     }
@@ -54,11 +58,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(buildGithubInstallUrl());
     }
 
-    const redirect = new URL("/", request.url);
+    const redirect = buildAuthRedirect(request);
     redirect.searchParams.set("github_connected", "1");
     return NextResponse.redirect(redirect);
   } catch (caughtError) {
-    const redirect = new URL("/", request.url);
+    const redirect = buildAuthRedirect(request);
     redirect.searchParams.set(
       "github_error",
       caughtError instanceof Error ? caughtError.message : "GitHub connection failed."

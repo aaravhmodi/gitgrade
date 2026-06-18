@@ -5,6 +5,10 @@ import json
 import subprocess
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.ingestion import weak_label_for_commit
 from gitgrade_analyzer.models import CommitFeatures
 

@@ -3,6 +3,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.dataset import load_labeled_commits
 from gitgrade_analyzer.training import train_classifier
 

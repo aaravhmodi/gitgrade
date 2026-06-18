@@ -6,6 +6,10 @@ import random
 from collections import defaultdict
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.review import append_jsonl, load_jsonl, reviewed_shas
 
 

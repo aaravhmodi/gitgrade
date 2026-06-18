@@ -4,6 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.github_client import GithubClient, GithubCommitSource
 from gitgrade_analyzer.ingestion import commit_features_from_github_detail, parse_repo_slug, weak_label_for_commit
 

@@ -5,6 +5,10 @@ import json
 import random
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.review import append_jsonl, load_jsonl, reviewed_shas
 
 PRIORITY_LABELS = ["noise", "low_value", "medium_value"]

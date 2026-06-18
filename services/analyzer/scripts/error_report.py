@@ -5,6 +5,10 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from _bootstrap import ensure_project_root
+
+ensure_project_root()
+
 from gitgrade_analyzer.dataset import load_labeled_commits
 from gitgrade_analyzer.review import load_jsonl
 from gitgrade_analyzer.training import fit_full_classifier, predict_labels
