@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from pathlib import Path
 
 from gitgrade_analyzer.ingestion import weak_label_for_commit
@@ -41,6 +42,24 @@ def parse_args() -> argparse.Namespace:
         "--input",
         type=Path,
         default=Path("../../datasets/repos/security-pride__CommitSuite/Ten-category-eval_dataset/all_data.json"),
+        help="Path to the CommitSuite all_data.json export.",
+    )
+    parser.add_argument(
+        "--repo-url",
+        type=str,
+        default="https://github.com/security-pride/CommitSuite",
+        help="Upstream CommitSuite repository URL used when the local export is missing.",
+    )
+    parser.add_argument(
+        "--repo-dir",
+        type=Path,
+        default=Path("../../datasets/repos/security-pride__CommitSuite"),
+        help="Directory where the upstream repository is cloned or updated.",
+    )
+    parser.add_argument(
+        "--sync-repo",
+        action="store_true",
+        help="Clone or update the upstream CommitSuite repository before importing.",
     )
     parser.add_argument(
         "--output",
@@ -49,6 +68,14 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--limit", type=int, default=2000)
     return parser.parse_args()
+
+
+def sync_repo(repo_url: str, repo_dir: Path) -> None:
+    repo_dir.parent.mkdir(parents=True, exist_ok=True)
+    if repo_dir.exists():
+        subprocess.run(["git", "-C", str(repo_dir), "pull", "--ff-only"], check=True)
+        return
+    subprocess.run(["git", "clone", "--depth", "1", repo_url, str(repo_dir)], check=True)
 
 
 def classify_file(path: str) -> str:
@@ -120,7 +147,10 @@ def features_from_record(record: dict) -> CommitFeatures:
 
 def main() -> None:
     args = parse_args()
-    rows = json.loads(args.input.read_text(encoding="utf-8"))
+    if args.sync_repo or not args.input.exists():
+        sync_repo(args.repo_url, args.repo_dir)
+    input_path = args.input if args.input.exists() else args.repo_dir / "Ten-category-eval_dataset" / "all_data.json"
+    rows = json.loads(input_path.read_text(encoding="utf-8"))
     selected = rows[: args.limit] if args.limit else rows
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -136,7 +166,7 @@ def main() -> None:
             }
             handle.write(json.dumps(payload) + "\n")
 
-    print(f"Imported {len(selected)} CommitSuite commits into {args.output}")
+    print(f"Imported {len(selected)} CommitSuite commits from {input_path} into {args.output}")
 
 
 if __name__ == "__main__":

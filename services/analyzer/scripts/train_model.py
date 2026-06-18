@@ -12,8 +12,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--dataset",
         type=Path,
-        default=Path("../../datasets/seed_open_source_commits.jsonl"),
-        help="Path to a labeled JSONL dataset of commits.",
+        default=Path("../../datasets/training_combined_with_local.jsonl"),
+        help="Path to a labeled JSONL dataset of commits. Defaults to the merged training corpus.",
     )
     parser.add_argument(
         "--reviews",

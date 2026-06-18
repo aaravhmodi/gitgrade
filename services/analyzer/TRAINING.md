@@ -59,12 +59,14 @@ cd services/analyzer
 .venv\Scripts\python scripts/collect_from_git_repos.py --max-repos 3 --commits-per-repo 75
 ```
 
-If you want a larger prebuilt open-source corpus, import CommitSuite:
+If you want a larger prebuilt open-source corpus, sync and import CommitSuite:
 
 ```bash
 cd services/analyzer
-.venv\Scripts\python scripts/import_commitsuite.py --limit 2000
+.venv\Scripts\python scripts/import_commitsuite.py --sync-repo --limit 2000
 ```
+
+The importer pulls from `https://github.com/security-pride/CommitSuite` and reads `Ten-category-eval_dataset/all_data.json` from that repo.
 
 To add your own GitHub public history:
 
@@ -98,4 +100,4 @@ cd services/analyzer
 
 ## Next step
 
-Grow the reviewed slice so the model trains on corrected labels instead of only weak supervision.
+Keep the merged training corpus fresh by re-importing CommitSuite, re-running review on borderline commits, and retraining from `datasets/training_combined_with_local.jsonl`.
