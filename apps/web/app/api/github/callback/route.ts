@@ -13,7 +13,7 @@ import {
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
 function buildAuthRedirect(request: NextRequest) {
-  return new URL("/auth", request.url);
+  return new URL("/", request.url);
 }
 
 export async function GET(request: NextRequest) {

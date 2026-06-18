@@ -187,6 +187,10 @@ export default function HomePage() {
       params.delete("github_connected");
       const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
       window.history.replaceState({}, "", nextUrl);
+    } else if (params.get("auth")) {
+      params.delete("auth");
+      const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+      window.history.replaceState({}, "", nextUrl);
     }
 
     void loadGithubRepos();
