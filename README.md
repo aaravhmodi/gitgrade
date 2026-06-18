@@ -95,6 +95,7 @@ Use the custom domain as the callback URL everywhere:
 
 - GitHub App callback URL: `https://gitgradebyaarav.xyz/api/github/callback`
 - Webhook URL: `https://gitgradebyaarav.xyz/api/github/webhooks`
+- Web app base URL: `GITGRADE_PUBLIC_URL=https://gitgradebyaarav.xyz`
 
 Do not leave the GitHub App pointed at the old Vercel callback URL unless you explicitly want auth redirects to land there.
 

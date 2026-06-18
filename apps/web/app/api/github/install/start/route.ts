@@ -1,7 +1,13 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { buildGithubAuthorizeUrl, createInstallNonce, getGithubAppConfig, getMissingGithubAppConfigKeys } from "@/lib/github-app";
+import {
+  buildGithubAuthorizeUrl,
+  createInstallNonce,
+  getGithubAppConfig,
+  getMissingGithubAppConfigKeys,
+  resolveAppUrl,
+} from "@/lib/github-app";
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
@@ -14,12 +20,12 @@ export async function GET(request: NextRequest) {
   }
 
   const nonce = createInstallNonce();
-  const callbackUrl = new URL("/api/github/callback", request.url).toString();
+  const callbackUrl = resolveAppUrl(request.url, "/api/github/callback");
   const cookieStore = await cookies();
   cookieStore.set(INSTALL_COOKIE, nonce, {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 10,
   });

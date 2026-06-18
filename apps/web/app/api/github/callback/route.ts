@@ -8,12 +8,13 @@ import {
   getGithubAppConfig,
   getMissingGithubAppConfigKeys,
   persistGithubSession,
+  resolveAppUrl,
 } from "@/lib/github-app";
 
 const INSTALL_COOKIE = "gitgrade_github_install_nonce";
 
 function buildAuthRedirect(request: NextRequest) {
-  return new URL("/", request.url);
+  return new URL(resolveAppUrl(request.url, "/"));
 }
 
 export async function GET(request: NextRequest) {
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const callbackUrl = new URL("/api/github/callback", request.url).toString();
+    const callbackUrl = resolveAppUrl(request.url, "/api/github/callback");
     const session = await createSessionFromCode(code, callbackUrl);
     await persistGithubSession(session);
     const installations = await getAuthorizedInstallations(session.accessToken);

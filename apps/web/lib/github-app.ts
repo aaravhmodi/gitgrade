@@ -75,6 +75,29 @@ export function getMissingGithubAppConfigKeys() {
   return REQUIRED_GITHUB_APP_ENV_KEYS.filter((key) => !process.env[key]);
 }
 
+export function getConfiguredAppOrigin() {
+  const rawOrigin =
+    process.env.GITGRADE_PUBLIC_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    null;
+
+  if (!rawOrigin) {
+    return null;
+  }
+
+  try {
+    return new URL(rawOrigin).origin;
+  } catch {
+    return null;
+  }
+}
+
+export function resolveAppUrl(requestUrl: string, pathname: string) {
+  const origin = getConfiguredAppOrigin() ?? new URL(requestUrl).origin;
+  return new URL(pathname, origin).toString();
+}
+
 function requireGithubAppConfig() {
   const config = getGithubAppConfig();
   if (!config) {
@@ -139,7 +162,7 @@ export function createGithubJwt() {
     JSON.stringify({
       iat: now - 60,
       exp: now + 9 * 60,
-      iss: config.clientId,
+      iss: config.appId,
     })
   );
   const unsigned = `${header}.${payload}`;
@@ -290,7 +313,7 @@ export async function persistGithubSession(session: GithubSession) {
   cookieStore.set(SESSION_COOKIE, encodeSession(session), {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: SESSION_TTL_SECONDS,
   });
