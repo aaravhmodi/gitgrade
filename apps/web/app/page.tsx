@@ -33,10 +33,11 @@ function formatApiError(payload: unknown, fallback: string) {
   const objectPayload = payload as {
     error?: string;
     detail?: Array<{ msg?: string } | string> | string;
+    status?: number;
   };
 
   if (typeof objectPayload.error === "string" && objectPayload.error.trim()) {
-    return objectPayload.error;
+    return objectPayload.status ? `${objectPayload.status}: ${objectPayload.error}` : objectPayload.error;
   }
 
   if (typeof objectPayload.detail === "string" && objectPayload.detail.trim()) {
@@ -66,6 +67,20 @@ function titleize(value: string) {
   return value.replaceAll("_", " ");
 }
 
+function isValidRepoSlug(value: string) {
+  return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value.trim());
+}
+
+type ServiceStatus = {
+  githubConfigured: boolean;
+  githubConnected: boolean;
+  githubUsername: string | null;
+  githubMissing: string[];
+  analyzerOnline: boolean;
+  analyzerStatus: number | null;
+  analyzerUrl: string;
+};
+
 export default function HomePage() {
   const [mode, setMode] = useState<"user" | "repo">("user");
   const [subject, setSubject] = useState("vercel/next.js");
@@ -80,6 +95,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [report, setReport] = useState<GitGradeReport | null>(null);
+  const [serviceStatus, setServiceStatus] = useState<ServiceStatus | null>(null);
 
   const filteredRepos = useMemo(() => {
     const query = repoSearch.trim().toLowerCase();
@@ -127,6 +143,26 @@ export default function HomePage() {
     }
   }
 
+  async function loadServiceStatus() {
+    try {
+      const response = await fetch("/api/status", { cache: "no-store" });
+      const payload = (await response.json().catch(() => null)) as ServiceStatus | null;
+      if (response.ok && payload) {
+        setServiceStatus(payload);
+      }
+    } catch {
+      setServiceStatus({
+        githubConfigured: false,
+        githubConnected: false,
+        githubUsername: null,
+        githubMissing: [],
+        analyzerOnline: false,
+        analyzerStatus: null,
+        analyzerUrl: "",
+      });
+    }
+  }
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const githubError = params.get("github_error");
@@ -143,6 +179,7 @@ export default function HomePage() {
     }
 
     void loadGithubRepos();
+    void loadServiceStatus();
   }, []);
 
   function handleConnectGithub() {
@@ -201,6 +238,8 @@ export default function HomePage() {
         if (!selectedRepos.length) {
           throw new Error("Select at least one repository to analyze.");
         }
+      } else if (!isValidRepoSlug(subject)) {
+        throw new Error("Use owner/repo format for repo analysis.");
       }
 
       const response = await fetch(`/api/analyze/${mode}`, {
@@ -267,6 +306,20 @@ export default function HomePage() {
           <span className="header-status">commit signal · not activity</span>
         </div>
       </header>
+
+      <div className="service-strip section-entrance">
+        <span className={serviceStatus?.githubConfigured ? "service-chip ok" : "service-chip warn"}>
+          GitHub {serviceStatus?.githubConfigured ? "configured" : "missing"}
+        </span>
+        <span className={serviceStatus?.githubConnected ? "service-chip ok" : "service-chip warn"}>
+          {serviceStatus?.githubConnected
+            ? `Connected${serviceStatus.githubUsername ? ` as ${serviceStatus.githubUsername}` : ""}`
+            : "Not connected"}
+        </span>
+        <span className={serviceStatus?.analyzerOnline ? "service-chip ok" : "service-chip warn"}>
+          Analyzer {serviceStatus?.analyzerOnline ? "online" : "offline"}
+        </span>
+      </div>
 
       <section className="hero hero-grid hero-entrance">
         <div className="hero-copy">
@@ -433,29 +486,34 @@ export default function HomePage() {
               {connectingError ? <p className="status-line error">{connectingError}</p> : null}
             </div>
           ) : (
-            <div className="repo-mode-panel">
-              <p className="helper-text">
-                Repo mode is for direct analysis of one public repository by slug, such as
-                <strong> `vercel/next.js`</strong>. Use it when you want to inspect a single codebase
-                without connecting a GitHub account.
-              </p>
-              <div className="input-row">
-                <input
-                  className="text-input"
-                  onChange={(e) => setSubject(e.target.value)}
-                  placeholder="owner/repo"
-                  value={subject}
-                />
+              <div className="repo-mode-panel">
+                <p className="helper-text">
+                  Repo mode is for direct analysis of one public repository by slug, such as
+                  <strong> `vercel/next.js`</strong>. Use it when you want to inspect a single codebase
+                  without connecting a GitHub account.
+                </p>
+                <div className="input-row">
+                  <input
+                    className="text-input"
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="owner/repo"
+                    value={subject}
+                  />
+                  {subject.trim() && !isValidRepoSlug(subject) ? (
+                    <p className="helper-text">Use the exact owner/repo format. Example: `vercel/next.js`.</p>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
             <div className="form-actions">
               <button
                 className="btn-primary"
                 disabled={
                   loading ||
-                  (mode === "repo" ? !subject.trim() : loadingRepos || !connectedUsername || selectedRepos.length === 0)
+                  (mode === "repo"
+                    ? !isValidRepoSlug(subject)
+                    : loadingRepos || !connectedUsername || selectedRepos.length === 0)
                 }
                 type="submit"
               >

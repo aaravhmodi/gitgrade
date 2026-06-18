@@ -40,6 +40,16 @@ type GithubOAuthTokenResponse = {
   token_type: string;
 };
 
+export class GithubApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "GithubApiError";
+    this.status = status;
+  }
+}
+
 export function getGithubAppConfig(): GithubAppConfig | null {
   const appId = process.env.GITHUB_APP_ID;
   const clientId = process.env.GITHUB_APP_CLIENT_ID;
@@ -153,7 +163,15 @@ async function fetchGithubJson<T>(url: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new Error(await response.text());
+    const text = await response.text();
+    let message = text || "GitHub request failed.";
+    try {
+      const parsed = JSON.parse(text) as { message?: string; error?: string };
+      message = parsed.message ?? parsed.error ?? message;
+    } catch {
+      // Keep the plain text body.
+    }
+    throw new GithubApiError(response.status, message);
   }
 
   return (await response.json()) as T;

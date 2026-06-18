@@ -4,6 +4,10 @@ import { getGithubSession } from "@/lib/github-app";
 
 const ANALYZER_URL = process.env.ANALYZER_URL ?? "http://127.0.0.1:8010";
 
+function isValidRepoSlug(value: string) {
+  return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value);
+}
+
 function extractAnalyzerError(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") {
     return fallback;
@@ -51,7 +55,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: "Unknown analysis mode." }, { status: 404 });
   }
 
-  const payload = await request.json();
+  const payload = await request.json().catch(() => null);
+  if (!payload || typeof payload !== "object") {
+    return NextResponse.json({ error: "Invalid analysis payload." }, { status: 400 });
+  }
+
   if (mode === "user") {
     const session = await getGithubSession();
     if (!session) {
@@ -60,6 +68,15 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
     payload.username = session.username;
     payload.github_token = session.accessToken;
+  } else if (typeof payload.repo !== "string" || !payload.repo.trim()) {
+    return NextResponse.json({ error: "Repo analysis requires a repo slug like owner/repo." }, { status: 400 });
+  } else if (!isValidRepoSlug(payload.repo.trim())) {
+    return NextResponse.json(
+      { error: "Repo slug must use owner/repo format with only letters, numbers, dots, hyphens, or underscores." },
+      { status: 400 }
+    );
+  } else {
+    payload.repo = payload.repo.trim();
   }
 
   const response = await fetch(`${ANALYZER_URL}/analyze/${mode}`, {
@@ -72,7 +89,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
     return NextResponse.json(
-      { error: extractAnalyzerError(payload, "Analyzer request failed.") },
+      {
+        error: extractAnalyzerError(payload, "Analyzer request failed."),
+        status: response.status,
+        source: "analyzer",
+      },
       { status: response.status }
     );
   }

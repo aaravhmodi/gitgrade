@@ -99,6 +99,39 @@ input {
   color: var(--text-muted);
 }
 
+.service-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.service-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.service-chip.ok {
+  color: var(--text);
+  border-color: rgba(92, 158, 110, 0.45);
+  background: rgba(92, 158, 110, 0.1);
+}
+
+.service-chip.warn {
+  color: var(--text-muted);
+  border-color: rgba(224, 92, 75, 0.35);
+  background: rgba(224, 92, 75, 0.08);
+}
+
 .hero {
   padding-bottom: 20px;
 }
@@ -979,6 +1012,14 @@ input {
 }
 
 @media (max-width: 720px) {
+  .service-strip {
+    gap: 6px;
+  }
+
+  .service-chip {
+    width: fit-content;
+  }
+
   .shell,
   .shell-wide {
     width: min(100vw - 28px, 100%);

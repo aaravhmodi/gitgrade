@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import {
+  GithubApiError,
   clearGithubSession,
   getAuthorizedInstallations,
   getGithubAppConfig,
@@ -47,10 +48,13 @@ export async function GET() {
       repos: reposByInstallation.flat().sort((a, b) => b.updated_at.localeCompare(a.updated_at)),
     });
   } catch (caughtError) {
-    await clearGithubSession();
+    const status = caughtError instanceof GithubApiError ? caughtError.status : 401;
+    if (status === 401 || status === 403) {
+      await clearGithubSession();
+    }
     return NextResponse.json(
       { error: caughtError instanceof Error ? caughtError.message : "Unable to load repositories from GitHub." },
-      { status: 401 }
+      { status }
     );
   }
 }
