@@ -1,12 +1,6 @@
 # gitgrade-analyzer
 
-Initial analyzer service for GitGrade.
-
-## Current scope
-
-- stable report models
-- hybrid model + deterministic impact scoring
-- repo/user analysis API
+GitGrade scoring API.
 
 ## Run
 
@@ -17,7 +11,7 @@ uvicorn gitgrade_analyzer.main:app --reload
 
 ## Redis cache
 
-Set `REDIS_URL` to enable report caching and `ANALYZER_CACHE_TTL_SECONDS` to tune cache lifetime.
+Set `REDIS_URL` to enable report caching.
 
 Example:
 
