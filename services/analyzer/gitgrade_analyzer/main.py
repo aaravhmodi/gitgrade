@@ -14,6 +14,7 @@ from .github_client import GithubApiError, GithubClient
 from .models import AnalyzeRepoRequest, AnalyzeUserRequest, CommitFeatures, GitGradeReport
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 posthog.api_key = os.environ.get("POSTHOG_API_KEY", "")
 posthog.host = os.environ.get("POSTHOG_HOST", "")
@@ -26,6 +27,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="GitGrade Analyzer", version="0.1.0", lifespan=lifespan)
+
+
+def track_event(event_name: str, properties: dict[str, object]) -> None:
+    if not posthog.api_key:
+        return
+
+    try:
+      posthog.capture("anonymous", event_name, properties)
+    except Exception:
+      logger.exception("posthog capture failed")
 
 
 @app.exception_handler(GithubApiError)
@@ -66,10 +77,9 @@ def sample_report() -> GitGradeReport:
         ),
     ]
     report = analyze_commit_features("repository", "owner/repo", sample_commits)
-    posthog.capture(
-        "anonymous",
+    track_event(
         "sample_report_viewed",
-        {"grade": report.grade, "score": report.score},
+        {"grade": report.summary.overall_grade, "score": report.summary.overall_score},
     )
     return report
 
@@ -77,10 +87,9 @@ def sample_report() -> GitGradeReport:
 @app.post("/analyze/repo", response_model=GitGradeReport)
 def analyze_repo_endpoint(payload: AnalyzeRepoRequest) -> GitGradeReport:
     report = analyze_repo(payload.repo, payload.commit_limit)
-    posthog.capture(
-        "anonymous",
+    track_event(
         "repo_analyzed",
-        {"repo": payload.repo, "grade": report.grade, "score": report.score},
+        {"repo": payload.repo, "grade": report.summary.overall_grade, "score": report.summary.overall_score},
     )
     return report
 
@@ -96,9 +105,8 @@ def analyze_user_endpoint(payload: AnalyzeUserRequest) -> GitGradeReport:
         selected_repo_slugs=payload.selected_repos,
         client=client,
     )
-    posthog.capture(
-        "anonymous",
+    track_event(
         "user_analyzed",
-        {"username": payload.username, "grade": report.grade, "score": report.score},
+        {"username": payload.username, "grade": report.summary.overall_grade, "score": report.summary.overall_score},
     )
     return report
