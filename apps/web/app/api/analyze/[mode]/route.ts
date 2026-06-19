@@ -49,6 +49,20 @@ type RouteContext = {
 
 export const dynamic = "force-dynamic";
 
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+      cache: "no-store",
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function POST(request: NextRequest, context: RouteContext) {
   const mode = context.params.mode;
   if (mode !== "repo" && mode !== "user") {
@@ -79,24 +93,43 @@ export async function POST(request: NextRequest, context: RouteContext) {
     payload.repo = payload.repo.trim();
   }
 
-  const response = await fetch(`${ANALYZER_URL}/analyze/${mode}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    cache: "no-store"
-  });
+  try {
+    const response = await fetchWithTimeout(`${ANALYZER_URL}/analyze/${mode}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) {
-    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      const analyzerPayload = await response.json().catch(() => null);
+      const analyzerText = await response.text().catch(() => "");
+      return NextResponse.json(
+        {
+          error: extractAnalyzerError(
+            analyzerPayload ?? (analyzerText ? { detail: analyzerText } : null),
+            "Analyzer returned an error."
+          ),
+          status: response.status,
+          source: "analyzer",
+          analyzerUrl: ANALYZER_URL,
+        },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(await response.json(), { status: 200 });
+  } catch (caughtError) {
+    const timedOut = caughtError instanceof DOMException && caughtError.name === "AbortError";
     return NextResponse.json(
       {
-        error: extractAnalyzerError(payload, "Analyzer request failed."),
-        status: response.status,
+        error: timedOut
+          ? `Analyzer timed out after 15 seconds at ${ANALYZER_URL}.`
+          : `Analyzer unavailable at ${ANALYZER_URL}.`,
+        status: 503,
         source: "analyzer",
+        analyzerUrl: ANALYZER_URL,
       },
-      { status: response.status }
+      { status: 503 }
     );
   }
-
-  return NextResponse.json(await response.json(), { status: 200 });
 }
