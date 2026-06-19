@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-import json
 import logging
 import os
 from contextlib import asynccontextmanager
