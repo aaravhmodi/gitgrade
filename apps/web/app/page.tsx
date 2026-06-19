@@ -256,9 +256,9 @@ export default function HomePage() {
           ? {
               selected_repos: selectedRepos.slice(0, 50),
               repo_limit: Math.max(Math.min(selectedRepos.length, 20), 1),
-              commits_per_repo: 30,
+              commits_per_repo: 100,
             }
-          : { repo: subject, commit_limit: 40 };
+          : { repo: subject, commit_limit: 100 };
 
       if (mode === "user") {
         if (!connectedUsername) {
