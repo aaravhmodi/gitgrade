@@ -64,14 +64,14 @@ class GitGradeReport(BaseModel):
 
 class AnalyzeRepoRequest(BaseModel):
     repo: str
-    commit_limit: int = Field(default=50, ge=1, le=200)
+    commit_limit: int = Field(default=100, ge=1, le=200)
 
 
 class AnalyzeUserRequest(BaseModel):
     username: str
     selected_repos: list[str] = Field(default_factory=list, max_length=50)
     repo_limit: int = Field(default=6, ge=1, le=20)
-    commits_per_repo: int = Field(default=40, ge=1, le=150)
+    commits_per_repo: int = Field(default=100, ge=1, le=150)
     github_token: str | None = None
 
 

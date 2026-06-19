@@ -2,14 +2,14 @@ import Link from "next/link";
 
 const repoPayload = `{
   "repo": "vercel/next.js",
-  "commit_limit": 40
+  "commit_limit": 100
 }`;
 
 const userPayload = `{
   "username": "aaravhmodi",
   "selected_repos": ["aaravhmodi/gitgrade", "aaravhmodi/news-scraper"],
   "repo_limit": 2,
-  "commits_per_repo": 30
+  "commits_per_repo": 100
 }`;
 
 export default function DocsPage() {
