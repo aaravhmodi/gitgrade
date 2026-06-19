@@ -33,6 +33,8 @@ function formatApiError(payload: unknown, fallback: string) {
   const objectPayload = payload as {
     error?: string;
     detail?: Array<{ msg?: string } | string> | string;
+    source?: string;
+    analyzerUrl?: string;
     status?: number;
   };
 
@@ -45,7 +47,7 @@ function formatApiError(payload: unknown, fallback: string) {
   }
 
   if (Array.isArray(objectPayload.detail) && objectPayload.detail.length) {
-    return objectPayload.detail
+    const detail = objectPayload.detail
       .map((item) => {
         if (typeof item === "string") {
           return item;
@@ -54,6 +56,18 @@ function formatApiError(payload: unknown, fallback: string) {
       })
       .filter(Boolean)
       .join(" ");
+
+    if (objectPayload.source === "analyzer" && objectPayload.analyzerUrl) {
+      return `${detail} (${objectPayload.analyzerUrl})`;
+    }
+
+    return detail;
+  }
+
+  if (objectPayload.source === "analyzer" && objectPayload.analyzerUrl) {
+    return objectPayload.status
+      ? `${objectPayload.status}: ${fallback} (${objectPayload.analyzerUrl})`
+      : `${fallback} (${objectPayload.analyzerUrl})`;
   }
 
   return fallback;
