@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from functools import lru_cache
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from .dataset import load_labeled_commits
 from .github_client import GithubClient, GithubCommitSource
@@ -253,9 +254,16 @@ def analyze_repo(repo_slug: str, commit_limit: int, client: GithubClient | None 
     source = GithubCommitSource(owner=owner, repo=repo)
     commit_refs = github.fetch_recent_commits(source, limit=commit_limit)
     features: list[CommitFeatures] = []
-    for commit_ref in commit_refs:
-        detail = github.fetch_commit_detail(source, commit_ref["sha"])
-        features.append(commit_features_from_github_detail(detail))
+    if commit_refs:
+        max_workers = min(8, len(commit_refs))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_map = {
+                executor.submit(github.fetch_commit_detail, source, commit_ref["sha"]): commit_ref["sha"]
+                for commit_ref in commit_refs
+            }
+            for future in as_completed(future_map):
+                detail = future.result()
+                features.append(commit_features_from_github_detail(detail))
     return analyze_commit_features("repository", repo_slug, features)
 
 
@@ -280,15 +288,27 @@ def analyze_user(
 
     features: list[CommitFeatures] = []
 
-    for repo in selected_repos:
-        owner, repo_name = repo["full_name"].split("/", maxsplit=1)
+    def fetch_repo_features(repo_full_name: str) -> list[CommitFeatures]:
+        owner, repo_name = repo_full_name.split("/", maxsplit=1)
         source = GithubCommitSource(owner=owner, repo=repo_name)
         commit_refs = github.fetch_recent_commits(source, limit=commits_per_repo)
-        for commit_ref in commit_refs:
-            commit_author = commit_ref.get("author") or {}
-            if commit_author.get("login", "").lower() != username.lower():
-                continue
-            detail = github.fetch_commit_detail(source, commit_ref["sha"])
-            features.append(commit_features_from_github_detail(detail))
+        repo_features: list[CommitFeatures] = []
+        if not commit_refs:
+            return repo_features
+
+        max_workers = min(8, len(commit_refs))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_map = {
+                executor.submit(github.fetch_commit_detail, source, commit_ref["sha"]): commit_ref
+                for commit_ref in commit_refs
+                if (commit_ref.get("author") or {}).get("login", "").lower() == username.lower()
+            }
+            for future in as_completed(future_map):
+                detail = future.result()
+                repo_features.append(commit_features_from_github_detail(detail))
+        return repo_features
+
+    for repo in selected_repos:
+        features.extend(fetch_repo_features(repo["full_name"]))
 
     return analyze_commit_features("user", username, features)

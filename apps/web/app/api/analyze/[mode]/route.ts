@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getGithubSession } from "@/lib/github-app";
 
 const ANALYZER_URL = process.env.ANALYZER_URL ?? "http://127.0.0.1:8010";
+const ANALYZER_TIMEOUT_MS = Number(process.env.ANALYZER_TIMEOUT_MS ?? "30000");
 
 function isValidRepoSlug(value: string) {
   return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value);
@@ -49,7 +50,7 @@ type RouteContext = {
 
 export const dynamic = "force-dynamic";
 
-async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 15000) {
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = ANALYZER_TIMEOUT_MS) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return NextResponse.json(
       {
         error: timedOut
-          ? `Analyzer timed out after 15 seconds at ${ANALYZER_URL}.`
+          ? `Analyzer timed out after ${Math.round(ANALYZER_TIMEOUT_MS / 1000)} seconds at ${ANALYZER_URL}.`
           : `Analyzer unavailable at ${ANALYZER_URL}.`,
         status: 503,
         source: "analyzer",
