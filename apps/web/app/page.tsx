@@ -263,7 +263,10 @@ export default function HomePage() {
         body: JSON.stringify(requestBody),
       });
 
-      const payload = (await response.json().catch(() => null)) as GitGradeReport | { error?: string; detail?: unknown } | null;
+      const payload = (await response.json().catch(() => null)) as
+        | GitGradeReport
+        | { error?: string; detail?: unknown; source?: string; status?: number; analyzerUrl?: string }
+        | null;
       if (!response.ok) {
         throw new Error(formatApiError(payload, "Analysis failed."));
       }
