@@ -101,12 +101,19 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     if (!response.ok) {
-      const analyzerPayload = await response.json().catch(() => null);
       const analyzerText = await response.text().catch(() => "");
+      let analyzerPayload: unknown = null;
+      if (analyzerText) {
+        try {
+          analyzerPayload = JSON.parse(analyzerText);
+        } catch {
+          analyzerPayload = { detail: analyzerText };
+        }
+      }
       return NextResponse.json(
         {
           error: extractAnalyzerError(
-            analyzerPayload ?? (analyzerText ? { detail: analyzerText } : null),
+            analyzerPayload,
             "Analyzer returned an error."
           ),
           status: response.status,
