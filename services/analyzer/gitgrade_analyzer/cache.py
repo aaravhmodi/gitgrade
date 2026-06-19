@@ -33,15 +33,25 @@ def _encode_command(*parts: str) -> bytes:
 def _read_line(sock: socket.socket) -> bytes:
     buffer = bytearray()
     while True:
-      chunk = sock.recv(1)
-      if not chunk:
-          raise ConnectionError("Redis connection closed.")
-      buffer.extend(chunk)
-      if buffer.endswith(b"\r\n"):
-          return bytes(buffer[:-2])
+        chunk = sock.recv(1)
+        if not chunk:
+            raise ConnectionError("Redis connection closed.")
+        buffer.extend(chunk)
+        if buffer.endswith(b"\r\n"):
+            return bytes(buffer[:-2])
 
 
 def _read_bytes(sock: socket.socket, size: int) -> bytes:
+    buffer = bytearray()
+    while len(buffer) < size:
+        chunk = sock.recv(size - len(buffer))
+        if not chunk:
+            raise ConnectionError("Redis connection closed.")
+        buffer.extend(chunk)
+    return bytes(buffer)
+
+
+def _read_exact(sock: socket.socket, size: int) -> bytes:
     buffer = bytearray()
     while len(buffer) < size:
         chunk = sock.recv(size - len(buffer))
@@ -67,7 +77,7 @@ def _read_response(sock: socket.socket):
         if length == -1:
             return None
         data = _read_bytes(sock, length)
-        if sock.recv(2) != b"\r\n":
+        if _read_exact(sock, 2) != b"\r\n":
             raise ConnectionError("Invalid Redis bulk string terminator.")
         return data.decode("utf-8")
     if prefix == b"*":

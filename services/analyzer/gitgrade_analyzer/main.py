@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import json
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -9,6 +10,7 @@ import posthog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from .cache import RedisCache, build_cache_key
 from .analysis import analyze_commit_features, analyze_repo, analyze_user
 from .github_client import GithubApiError, GithubClient
 from .models import AnalyzeRepoRequest, AnalyzeUserRequest, CommitFeatures, GitGradeReport
@@ -18,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 posthog.api_key = os.environ.get("POSTHOG_API_KEY", "")
 posthog.host = os.environ.get("POSTHOG_HOST", "")
+redis_cache = RedisCache.from_env()
+analysis_cache_ttl_seconds = int(os.environ.get("ANALYZER_CACHE_TTL_SECONDS", "900"))
+analysis_cache_version = os.environ.get("ANALYZER_CACHE_VERSION", "v1")
 
 
 @asynccontextmanager
@@ -37,6 +42,27 @@ def track_event(event_name: str, properties: dict[str, object]) -> None:
         posthog.capture("anonymous", event_name, properties)
     except Exception:
         logger.exception("posthog capture failed")
+
+
+def load_cached_report(cache_key: str) -> GitGradeReport | None:
+    if not redis_cache:
+        return None
+
+    cached = redis_cache.get_json(cache_key)
+    if not cached:
+        return None
+
+    try:
+        return GitGradeReport.model_validate(cached)
+    except Exception:
+        return None
+
+
+def store_cached_report(cache_key: str, report: GitGradeReport) -> None:
+    if not redis_cache:
+        return
+
+    redis_cache.set_json(cache_key, report.model_dump(mode="json"), analysis_cache_ttl_seconds)
 
 
 @app.exception_handler(GithubApiError)
@@ -86,10 +112,33 @@ def sample_report() -> GitGradeReport:
 
 @app.post("/analyze/repo", response_model=GitGradeReport)
 def analyze_repo_endpoint(payload: AnalyzeRepoRequest) -> GitGradeReport:
+    cache_key = build_cache_key(
+        analysis_cache_version,
+        {"mode": "repo", "repo": payload.repo, "commit_limit": payload.commit_limit},
+    )
+    cached_report = load_cached_report(cache_key)
+    if cached_report:
+        track_event(
+            "repo_analyzed",
+            {
+                "repo": payload.repo,
+                "grade": cached_report.summary.overall_grade,
+                "score": cached_report.summary.overall_score,
+                "cache_hit": True,
+            },
+        )
+        return cached_report
+
     report = analyze_repo(payload.repo, payload.commit_limit)
+    store_cached_report(cache_key, report)
     track_event(
         "repo_analyzed",
-        {"repo": payload.repo, "grade": report.summary.overall_grade, "score": report.summary.overall_score},
+        {
+            "repo": payload.repo,
+            "grade": report.summary.overall_grade,
+            "score": report.summary.overall_score,
+            "cache_hit": False,
+        },
     )
     return report
 
@@ -97,6 +146,28 @@ def analyze_repo_endpoint(payload: AnalyzeRepoRequest) -> GitGradeReport:
 @app.post("/analyze/user", response_model=GitGradeReport)
 def analyze_user_endpoint(payload: AnalyzeUserRequest) -> GitGradeReport:
     client = GithubClient(token=payload.github_token) if payload.github_token else None
+    cache_key = build_cache_key(
+        analysis_cache_version,
+        {
+            "mode": "user",
+            "username": payload.username.lower(),
+            "selected_repos": [repo.lower() for repo in payload.selected_repos],
+            "repo_limit": payload.repo_limit,
+            "commits_per_repo": payload.commits_per_repo,
+        },
+    )
+    cached_report = load_cached_report(cache_key)
+    if cached_report:
+        track_event(
+            "user_analyzed",
+            {
+                "username": payload.username,
+                "grade": cached_report.summary.overall_grade,
+                "score": cached_report.summary.overall_score,
+                "cache_hit": True,
+            },
+        )
+        return cached_report
 
     report = analyze_user(
         payload.username,
@@ -105,8 +176,14 @@ def analyze_user_endpoint(payload: AnalyzeUserRequest) -> GitGradeReport:
         selected_repo_slugs=payload.selected_repos,
         client=client,
     )
+    store_cached_report(cache_key, report)
     track_event(
         "user_analyzed",
-        {"username": payload.username, "grade": report.summary.overall_grade, "score": report.summary.overall_score},
+        {
+            "username": payload.username,
+            "grade": report.summary.overall_grade,
+            "score": report.summary.overall_score,
+            "cache_hit": False,
+        },
     )
     return report
