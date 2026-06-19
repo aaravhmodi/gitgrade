@@ -34,9 +34,9 @@ def track_event(event_name: str, properties: dict[str, object]) -> None:
         return
 
     try:
-      posthog.capture("anonymous", event_name, properties)
+        posthog.capture("anonymous", event_name, properties)
     except Exception:
-      logger.exception("posthog capture failed")
+        logger.exception("posthog capture failed")
 
 
 @app.exception_handler(GithubApiError)
